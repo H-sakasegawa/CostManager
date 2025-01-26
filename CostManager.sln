@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostManager", "CostManager\CostManager.csproj", "{4EE5C08F-7278-4F74-95B2-ADAFB8E2C62B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EE5C08F-7278-4F74-95B2-ADAFB8E2C62B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EE5C08F-7278-4F74-95B2-ADAFB8E2C62B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EE5C08F-7278-4F74-95B2-ADAFB8E2C62B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EE5C08F-7278-4F74-95B2-ADAFB8E2C62B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A41A4FF-52AC-4799-AE2D-9F021A7B0F64}
+	EndGlobalSection
+EndGlobal
