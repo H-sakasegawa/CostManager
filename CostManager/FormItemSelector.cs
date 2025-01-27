@@ -212,6 +212,8 @@ namespace CostManager
 
         private void FormProductList_Load(object sender, EventArgs e)
         {
+            //現在のサイズでフォームの最小サイズを指定
+            this.MinimumSize = new Size(this.Width, this.Height);
 
 
         }

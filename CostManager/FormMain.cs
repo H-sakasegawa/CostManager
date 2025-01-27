@@ -30,6 +30,8 @@ namespace CostManager
             PACKAGE_COST,   //包装費
             PRICE,          //定価
             PROFIT,         //利益率
+            //------------------------------
+            MAX
 
         }
         OptionData optionData = new OptionData();
@@ -49,7 +51,10 @@ namespace CostManager
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(optionData.DataBasePath))
+            //現在のサイズでフォームの最小サイズを指定
+            this.MinimumSize = new Size(this.Width, this.Height);
+
+            if (string.IsNullOrEmpty(optionData.DataBasePath))
             {
                 Utility.MessageConfirm("データベースのフォルダが未設定です。\nオプション画面からデータベースのフォルダを設定してください。","データベースパス");
                 EnalbeControl(false);
@@ -204,18 +209,26 @@ namespace CostManager
             float packageCostRate;
             float profit;
 
-            costData.Calc(out costRate, out rowCostRate, out laborCostRate, out packageCostRate, out profit);
+            int rc = costData.Calc(out costRate, out rowCostRate, out laborCostRate, out packageCostRate, out profit);
 
-            row.Cells[(int)COL_INDEX.PRODUCT_NUM].Value     = costData.ProductNum;
-            row.Cells[(int)COL_INDEX.ROW_COST].Value        = costRate * 100;
-            row.Cells[(int)COL_INDEX.MATERIAL_COST].Value   = rowCostRate * 100;
-            row.Cells[(int)COL_INDEX.WORKER_COST].Value     = laborCostRate * 100;
-            row.Cells[(int)COL_INDEX.PACKAGE_COST].Value    = packageCostRate * 100;
-            row.Cells[(int)COL_INDEX.PRICE].Value           = costData.Price;
-            row.Cells[(int)COL_INDEX.PROFIT].Value          = profit;
+            row.Cells[(int)COL_INDEX.PRODUCT_NUM].Value = costData.ProductNum;
+            row.Cells[(int)COL_INDEX.ROW_COST].Value = costRate * 100;
+            row.Cells[(int)COL_INDEX.MATERIAL_COST].Value = rowCostRate * 100;
+            row.Cells[(int)COL_INDEX.WORKER_COST].Value = laborCostRate * 100;
+            row.Cells[(int)COL_INDEX.PACKAGE_COST].Value = packageCostRate * 100;
+            row.Cells[(int)COL_INDEX.PRICE].Value = costData.Price;
+            row.Cells[(int)COL_INDEX.PROFIT].Value = profit;
 
+            Color forColor = Color.Black;
+            if (rc !=0)
+            {   //文字の色を赤色にする
+                forColor = Color.Red;
+            }
+            for (int i = 0; i < (int)COL_INDEX.MAX; i++)
+            {
+                row.Cells[i].Style.ForeColor = forColor;
+            }
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             FormItemSelector frm = new FormItemSelector(this, productReader);

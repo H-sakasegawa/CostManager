@@ -127,8 +127,15 @@ namespace CostManager
         /// <param name="laborCost">人件費(%)</param>
         /// <param name="packageCost">包装費(%)</param>
         /// <param name="profit">利益</param>
-        public void Calc(out float costRate, out float rowCostRate, out float laborCostRate, out float packageCostRate, out float profit)
+        /// <returns> 0..正常 -1..原価割れ</returns>
+        public int Calc(out float costRate, out float rowCostRate, out float laborCostRate, out float packageCostRate, out float profit)
         {
+            costRate = 0;
+            rowCostRate = 0;
+            laborCostRate = 0;
+            packageCostRate = 0;
+            profit = 0;
+
             //n個制作時の原材料費
             var rowCost = GetMateralCost();
             //n個制作時の人件費
@@ -136,17 +143,20 @@ namespace CostManager
             //n個制作時の包装費
             var packageCost = GetPackageCost();
 
+            //原価
+            var cost = rowCost + laborCost + packageCost;
+            if( Price < cost)
+            {
+                //原価割れ
+                return -1;
+            }
+
             //各原価率
             if (Price != 0)
             {
                 rowCostRate = (float)rowCost / Price;
                 laborCostRate = (float)laborCost / Price;
                 packageCostRate = (float)packageCost / Price;
-            }else
-            {
-                rowCostRate = 0;
-                laborCostRate = 0;
-                packageCostRate = 0;
             }
 
 
@@ -155,6 +165,8 @@ namespace CostManager
 
             //利益（n個販売時の定価 - n個販売時の定価定価　 *原価率)
             profit = Price - Price * costRate;
+
+            return 0;
         }
 
         public float GetMateralCost()

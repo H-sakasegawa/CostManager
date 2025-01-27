@@ -71,6 +71,8 @@ namespace CostManager
             grdRowMaterial.CellValueChanged += grdRowMaterial_CellValueChanged;
             grdWorker.CellValueChanged += grdWorker_CellValueChanged;
 
+            //現在のサイズでフォームの最小サイズを指定
+            this.MinimumSize = new Size(this.Width, this.Height);
 
         }
 
@@ -139,21 +141,42 @@ namespace CostManager
 
         void UpdateLabelData()
         {
-            lblCostMaterial.Text = costData.GetMateralCost().ToString();
-            lblCostWorker.Text = costData.GetWorkerCost().ToString();
-            lblCostPackage.Text = costData.GetPackageCost().ToString();
+            //原材料費
+            lblCostMaterial.Text = costData.GetMateralCost().ToString("C");
+            //人件費
+            lblCostWorker.Text = costData.GetWorkerCost().ToString("C");
+            //パッケージ費
+            lblCostPackage.Text = costData.GetPackageCost().ToString("C");
 
             var costAll = costData.GetAllCost();
-            lblCostAll.Text = costData.GetAllCost().ToString();
+            //総原価
+            lblCostAll.Text = costData.GetAllCost().ToString("C");
+            //製品単価
             if (costData.ProductNum > 0)
             {
-                lblCostOne.Text = (costAll / costData.ProductNum).ToString();
+                lblCostOne.Text = (costAll / costData.ProductNum).ToString("C");
             }else
             {
                 lblCostOne.Text = (0).ToString();
             }
-            lblCostRate.Text = costData.GetAllCost().ToString();
-            lblProfitRate.Text = (costData.GetProfitRate() * 100).ToString();
+            var allCost = costData.GetAllCost();
+            if (allCost < costData.Price && costData.Price!=0)
+            {
+                lblCostRate.ForeColor = Color.Black;
+                lblProfitRate.ForeColor = Color.Black;
+                //原価率
+                lblCostRate.Text = ((allCost / costData.Price)).ToString("P2");// "%"
+                 //利益率
+                lblProfitRate.Text = (costData.GetProfitRate()).ToString("P2");// "%"
+            }else
+            {
+                lblCostRate.ForeColor = Color.Red;
+                lblProfitRate.ForeColor = Color.Red;
+                //原価率
+                lblCostRate.Text = (0).ToString("P2");// "%"
+                //利益率
+                lblProfitRate.Text = (0).ToString("P2");// "%"
+            }
         }
 
         /// <summary>
@@ -423,7 +446,8 @@ namespace CostManager
             }
             //制作数
             costData.Price = value * costData.ProductNum;
-            lblPriceSum.Text = costData.Price.ToString();
+            //定価
+            lblPriceSum.Text = costData.Price.ToString("C");
             //ラベル情報更新
             UpdateLabelData();
 
