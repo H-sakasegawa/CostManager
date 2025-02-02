@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExcelReaderUtility
+namespace CostManager
 {
     internal class Const
     {
@@ -31,7 +31,6 @@ namespace ExcelReaderUtility
 
 
         public const string defaultFontName = "Meiryo UI";
-        public const float defaultProdListFontSize = 9;
 
         /// <summary>
         /// 商品リストのホイール操作によるフォントサイズ変更値

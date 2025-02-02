@@ -151,6 +151,7 @@
             this.Name = "FormItemSelector";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "商品選択";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormItemSelector_FormClosing);
             this.Load += new System.EventHandler(this.FormProductList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdProductNames)).EndInit();
             this.ResumeLayout(false);

@@ -13,6 +13,8 @@ using System.Xml.Linq;
 using static ExcelReaderUtility.ProductReader;
 using NPOI.POIFS.Crypt.Dsig;
 
+using CostManager;
+
 namespace ExcelReaderUtility
 {
     public class CostReader

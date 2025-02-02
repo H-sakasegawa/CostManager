@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using static ExcelReaderUtility.CostReader;
 
 namespace CostManager
@@ -215,8 +216,33 @@ namespace CostManager
             //現在のサイズでフォームの最小サイズを指定
             this.MinimumSize = new Size(this.Width, this.Height);
 
+            LoadUserSetting();
 
         }
+        private void FormItemSelector_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveUserSetting();
+        }
+
+        private void LoadUserSetting()
+        {
+            Utility.LoadUserSetting(this,
+                                   Properties.Settings.Default.FrmItemSelectLocX,
+                                   Properties.Settings.Default.FrmItemSelectLocY,
+                                   Properties.Settings.Default.FrmItemSelectSizeW,
+                                   Properties.Settings.Default.FrmItemSelectSizeH
+                                   );
+
+        }
+        private void SaveUserSetting()
+        {
+            Properties.Settings.Default.FrmItemSelectLocX = this.Location.X;
+            Properties.Settings.Default.FrmItemSelectLocY = this.Location.Y;
+            Properties.Settings.Default.FrmItemSelectSizeW = this.Size.Width;
+            Properties.Settings.Default.FrmItemSelectSizeH = this.Size.Height;
+            Properties.Settings.Default.Save();
+        }
+
         private void cmbKind_SelectedIndexChanged(object sender, EventArgs e)
         {
             //選択された種別の商品名をグリッドに設定
@@ -275,6 +301,7 @@ namespace CostManager
                 }
             }
 
+            bool bRc = true;;
             foreach(var row in lstCheckedRow)
             {
                 switch (selectType)
@@ -288,7 +315,7 @@ namespace CostManager
                     case enmSelectType.MATERIAL:
                         {
                             var value = (MaterialData)row.Tag;
-                            frmEditCost.AddMaterial(value);
+                            bRc = frmEditCost.AddMaterial(value);
                         }
                         break;
                     case enmSelectType.WORKER:
@@ -303,6 +330,10 @@ namespace CostManager
                             frmEditCost.AddPackage(value);
                         }
                         break;
+                }
+                if( !bRc)
+                {
+                    break;
                 }
             }
 
@@ -337,5 +368,6 @@ namespace CostManager
         {
             Close();
         }
+
     }
 }

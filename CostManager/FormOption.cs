@@ -49,6 +49,7 @@ namespace CostManager
         {
             FolderSelectDialog dlg = new FolderSelectDialog();
             dlg.Path = optionData.DataBasePath;
+            dlg.Title = "商品データベース格納フォルダを選択";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 txtDataBasePath.Text = dlg.Path;

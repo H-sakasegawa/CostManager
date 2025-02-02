@@ -35,28 +35,26 @@ namespace CostManager
 
         }
         OptionData optionData = new OptionData();
-
         ProductReader productReader = new ProductReader();
-
         CostReader costReader = new CostReader();
-
         string curCostDataFilePath = null;
+
 
         public FormMain()
         {
             InitializeComponent();
-
-
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
+            LoadUserSetting();
+
             //現在のサイズでフォームの最小サイズを指定
             this.MinimumSize = new Size(this.Width, this.Height);
 
             if (string.IsNullOrEmpty(optionData.DataBasePath))
             {
-                Utility.MessageConfirm("データベースのフォルダが未設定です。\nオプション画面からデータベースのフォルダを設定してください。","データベースパス");
+                Utility.MessageConfirm("データベースのフォルダが未設定です。\nオプション画面からデータベースのフォルダを設定してください。", "データベースパス");
                 EnalbeControl(false);
                 return;
             }
@@ -65,8 +63,29 @@ namespace CostManager
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveUserSetting();
             optionData.SaveOptions();
         }
+
+        private void LoadUserSetting()
+        {
+            Utility.LoadUserSetting(this, 
+                                    Properties.Settings.Default.FrmMainLocX,
+                                    Properties.Settings.Default.FrmMainLocY,
+                                    Properties.Settings.Default.FrmMainSizeW,
+                                    Properties.Settings.Default.FrmMainSizeH
+                                    );
+        }
+        private void SaveUserSetting()
+        {
+            Properties.Settings.Default.FrmMainLocX = this.Location.X;
+            Properties.Settings.Default.FrmMainLocY = this.Location.Y;
+            Properties.Settings.Default.FrmMainSizeW = this.Size.Width;
+            Properties.Settings.Default.FrmMainSizeH = this.Size.Height;
+            Properties.Settings.Default.Save();
+        }
+
+
 
         int ReadDataBase(string databasePath)
         {
@@ -134,7 +153,7 @@ namespace CostManager
             {
                 object value = (bool)(rows[iRow].Cells[(int)COL_INDEX.CHECK].Value);
 
-                if (value!=null && (bool)value == true)
+                if (value != null && (bool)value == true)
                 {
                     lstCheckedRow.Add(iRow);
                 }
@@ -190,7 +209,7 @@ namespace CostManager
             {
                 var value = row2.Cells[(int)COL_INDEX.KIND].Value;
 
-                if( cmbMainListKind.Items.IndexOf( value )<0)
+                if (cmbMainListKind.Items.IndexOf(value) < 0)
                 {
                     cmbMainListKind.Items.Add(value);
                 }
@@ -220,7 +239,7 @@ namespace CostManager
             row.Cells[(int)COL_INDEX.PROFIT].Value = profit;
 
             Color forColor = Color.Black;
-            if (rc !=0)
+            if (rc != 0)
             {   //文字の色を赤色にする
                 forColor = Color.Red;
             }
@@ -238,7 +257,7 @@ namespace CostManager
 
         private void chkAll_CheckedChanged(object sender, EventArgs e)
         {
-            foreach(DataGridViewRow row in gridList.Rows)
+            foreach (DataGridViewRow row in gridList.Rows)
             {
                 row.Cells[(int)COL_INDEX.CHECK].Value = chkAll.Checked;
             }
@@ -251,8 +270,8 @@ namespace CostManager
 
             var costData = (CostData)selectRows[0].Tag;
 
-            FormEditCost frm = new FormEditCost(costData, costReader);
-            if( frm.ShowDialog() == DialogResult.OK)
+            FormEditCost frm = new FormEditCost(costData, costReader, productReader);
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 //メイングリッドの各種コストを計算して表示　★★
                 UpdateRowValues(selectRows[0]);
@@ -272,7 +291,7 @@ namespace CostManager
             string orgPath = optionData.DataBasePath;
 
             FormOption frm = new FormOption(optionData);
-            if( frm.ShowDialog()== DialogResult.OK )
+            if (frm.ShowDialog() == DialogResult.OK)
             {
                 if (string.IsNullOrEmpty(optionData.DataBasePath))
                 {
@@ -330,18 +349,22 @@ namespace CostManager
         /// <param name="e"></param>
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            string filePath = GetSaveFileName(curCostDataFilePath);
-            if( string.IsNullOrEmpty(filePath))
+            curCostDataFilePath = GetSaveFileName(curCostDataFilePath);
+            if (string.IsNullOrEmpty(curCostDataFilePath))
             {
                 return;
             }
-            SaveData(filePath);
+            SaveData(curCostDataFilePath);
         }
-        private string GetSaveFileName(string initFilePath=null)
+        private string GetSaveFileName(string initFilePath = null)
         {
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.FileName = initFilePath;
-            if (dlg.ShowDialog()== DialogResult.OK)
+            dlg.AddExtension = true;
+            dlg.DefaultExt = "yaml";
+            dlg.Filter = "原価管理データ|*.yaml|全て|*.*";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
                 return dlg.FileName;
             }
@@ -367,6 +390,10 @@ namespace CostManager
         private void mnuLoad_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
+            dlg.FileName = curCostDataFilePath;
+            dlg.AddExtension = true;
+            dlg.DefaultExt = "yaml";
+            dlg.Filter = "原価管理データ|*.yaml|全て|*.*";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 var loadData = LoadData(dlg.FileName);
@@ -389,7 +416,7 @@ namespace CostManager
 
                 // ドラッグ中のファイルやディレクトリの取得
                 string[] drags = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if( drags.Length >1)
+                if (drags.Length > 1)
                 {
                     return;
                 };
@@ -435,5 +462,20 @@ namespace CostManager
 
         }
 
-     }
+        /// <summary>
+        /// 印刷ボタン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolBtnPrint_Click(object sender, EventArgs e)
+        {
+            CreatePrintData();
+
+            PrintDocumentEx pd = CreatePrintDocument();
+            pd.ResetPageIndex();
+
+            FormPrintPreview frm = new FormPrintPreview(this, pd);
+            frm.ShowDialog();
+        }
+    }
 }

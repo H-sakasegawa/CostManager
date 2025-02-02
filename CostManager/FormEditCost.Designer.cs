@@ -37,11 +37,20 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEditCost));
             this.grdRowMaterial = new System.Windows.Forms.DataGridView();
+            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.lblProductName = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtMakeNum = new System.Windows.Forms.TextBox();
             this.grdWorker = new System.Windows.Forms.DataGridView();
+            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -54,6 +63,10 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.grdPackage = new System.Windows.Forms.DataGridView();
+            this.Column6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnDelPackage = new System.Windows.Forms.Button();
             this.btnAddPackage = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -77,31 +90,18 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.lblSalt = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
+            this.lblCarbohydrates = new System.Windows.Forms.Label();
+            this.lblLipids = new System.Windows.Forms.Label();
+            this.lblProtein = new System.Windows.Forms.Label();
+            this.lblCalorie = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grdRowMaterial)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grdWorker)).BeginInit();
             this.tabControl.SuspendLayout();
@@ -146,6 +146,45 @@
             this.grdRowMaterial.Size = new System.Drawing.Size(339, 148);
             this.grdRowMaterial.TabIndex = 10;
             this.grdRowMaterial.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdRowMaterial_CellValueChanged);
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "選択";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 40;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "分類";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 70;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.HeaderText = "原材料";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Width = 150;
+            // 
+            // Column2
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Column2.HeaderText = "使用量(g)";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 80;
+            // 
+            // Column3
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "C0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Column3.HeaderText = "費用(円)";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 80;
             // 
             // label1
             // 
@@ -203,6 +242,38 @@
             this.grdWorker.Size = new System.Drawing.Size(290, 155);
             this.grdWorker.TabIndex = 15;
             this.grdWorker.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdWorker_CellValueChanged);
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "選択";
+            this.Column5.Name = "Column5";
+            this.Column5.Width = 40;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "作業者";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dataGridViewTextBoxColumn4.HeaderText = "時間(分)";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.Width = 80;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "C0";
+            dataGridViewCellStyle4.NullValue = "False";
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridViewTextBoxColumn5.HeaderText = "費用(円)";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            this.dataGridViewTextBoxColumn5.Width = 80;
             // 
             // tabControl
             // 
@@ -370,6 +441,43 @@
             this.grdPackage.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdPackage.Size = new System.Drawing.Size(275, 132);
             this.grdPackage.TabIndex = 16;
+            // 
+            // Column6
+            // 
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Format = "C0";
+            dataGridViewCellStyle5.NullValue = "False";
+            this.Column6.DefaultCellStyle = dataGridViewCellStyle5;
+            this.Column6.HeaderText = "選択";
+            this.Column6.Name = "Column6";
+            this.Column6.Width = 40;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "包装材";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Width = 150;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dataGridViewTextBoxColumn6.HeaderText = "必要数";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            this.dataGridViewTextBoxColumn6.Width = 80;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "C0";
+            dataGridViewCellStyle7.NullValue = "0";
+            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridViewTextBoxColumn7.HeaderText = "費用(円)";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Width = 80;
             // 
             // btnDelPackage
             // 
@@ -604,12 +712,12 @@
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.label14);
+            this.groupBox3.Controls.Add(this.lblSalt);
             this.groupBox3.Controls.Add(this.label15);
-            this.groupBox3.Controls.Add(this.label16);
-            this.groupBox3.Controls.Add(this.label19);
-            this.groupBox3.Controls.Add(this.label20);
-            this.groupBox3.Controls.Add(this.label24);
+            this.groupBox3.Controls.Add(this.lblCarbohydrates);
+            this.groupBox3.Controls.Add(this.lblLipids);
+            this.groupBox3.Controls.Add(this.lblProtein);
+            this.groupBox3.Controls.Add(this.lblCalorie);
             this.groupBox3.Controls.Add(this.label25);
             this.groupBox3.Controls.Add(this.label26);
             this.groupBox3.Controls.Add(this.label27);
@@ -621,14 +729,14 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "栄養成分";
             // 
-            // label14
+            // lblSalt
             // 
-            this.label14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label14.Location = new System.Drawing.Point(94, 109);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(85, 22);
-            this.label14.TabIndex = 9;
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSalt.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblSalt.Location = new System.Drawing.Point(94, 109);
+            this.lblSalt.Name = "lblSalt";
+            this.lblSalt.Size = new System.Drawing.Size(85, 22);
+            this.lblSalt.TabIndex = 9;
+            this.lblSalt.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label15
             // 
@@ -640,41 +748,41 @@
             this.label15.Text = "食塩";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label16
+            // lblCarbohydrates
             // 
-            this.label16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label16.Location = new System.Drawing.Point(94, 87);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(85, 22);
-            this.label16.TabIndex = 7;
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblCarbohydrates.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblCarbohydrates.Location = new System.Drawing.Point(94, 87);
+            this.lblCarbohydrates.Name = "lblCarbohydrates";
+            this.lblCarbohydrates.Size = new System.Drawing.Size(85, 22);
+            this.lblCarbohydrates.TabIndex = 7;
+            this.lblCarbohydrates.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label19
+            // lblLipids
             // 
-            this.label19.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label19.Location = new System.Drawing.Point(94, 65);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(85, 22);
-            this.label19.TabIndex = 6;
-            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblLipids.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblLipids.Location = new System.Drawing.Point(94, 65);
+            this.lblLipids.Name = "lblLipids";
+            this.lblLipids.Size = new System.Drawing.Size(85, 22);
+            this.lblLipids.TabIndex = 6;
+            this.lblLipids.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label20
+            // lblProtein
             // 
-            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label20.Location = new System.Drawing.Point(94, 43);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(85, 22);
-            this.label20.TabIndex = 5;
-            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblProtein.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblProtein.Location = new System.Drawing.Point(94, 43);
+            this.lblProtein.Name = "lblProtein";
+            this.lblProtein.Size = new System.Drawing.Size(85, 22);
+            this.lblProtein.TabIndex = 5;
+            this.lblProtein.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label24
+            // lblCalorie
             // 
-            this.label24.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label24.Location = new System.Drawing.Point(94, 21);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(85, 22);
-            this.label24.TabIndex = 4;
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblCalorie.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblCalorie.Location = new System.Drawing.Point(94, 21);
+            this.lblCalorie.Name = "lblCalorie";
+            this.lblCalorie.Size = new System.Drawing.Size(85, 22);
+            this.lblCalorie.TabIndex = 4;
+            this.lblCalorie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label25
             // 
@@ -739,114 +847,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "選択";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 40;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "分類";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 70;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "原材料";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 150;
-            // 
-            // Column2
-            // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column2.HeaderText = "使用量(g)";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 80;
-            // 
-            // Column3
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "C0";
-            dataGridViewCellStyle2.NullValue = null;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Column3.HeaderText = "費用(円)";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 80;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "選択";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 40;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "作業者";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridViewTextBoxColumn4.HeaderText = "時間(分)";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.Width = 80;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C0";
-            dataGridViewCellStyle4.NullValue = "False";
-            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridViewTextBoxColumn5.HeaderText = "費用(円)";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.ReadOnly = true;
-            this.dataGridViewTextBoxColumn5.Width = 80;
-            // 
-            // Column6
-            // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.Format = "C0";
-            dataGridViewCellStyle5.NullValue = "False";
-            this.Column6.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Column6.HeaderText = "選択";
-            this.Column6.Name = "Column6";
-            this.Column6.Width = 40;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "包装材";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle6;
-            this.dataGridViewTextBoxColumn6.HeaderText = "必要数";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.ReadOnly = true;
-            this.dataGridViewTextBoxColumn6.Width = 80;
-            // 
-            // dataGridViewTextBoxColumn7
-            // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C0";
-            dataGridViewCellStyle7.NullValue = "0";
-            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle7;
-            this.dataGridViewTextBoxColumn7.HeaderText = "費用(円)";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.ReadOnly = true;
-            this.dataGridViewTextBoxColumn7.Width = 80;
-            // 
             // FormEditCost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -867,6 +867,7 @@
             this.Name = "FormEditCost";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "コスト編集画面";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditCost_FormClosing);
             this.Load += new System.EventHandler(this.FormEditCost_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grdRowMaterial)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grdWorker)).EndInit();
@@ -928,12 +929,12 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblSalt;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label lblCarbohydrates;
+        private System.Windows.Forms.Label lblLipids;
+        private System.Windows.Forms.Label lblProtein;
+        private System.Windows.Forms.Label lblCalorie;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;

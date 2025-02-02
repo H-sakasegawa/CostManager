@@ -34,5 +34,149 @@ namespace CostManager.Properties {
                 this["DataBasePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmItemSelectLocX {
+            get {
+                return ((int)(this["FrmItemSelectLocX"]));
+            }
+            set {
+                this["FrmItemSelectLocX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmItemSelectLocY {
+            get {
+                return ((int)(this["FrmItemSelectLocY"]));
+            }
+            set {
+                this["FrmItemSelectLocY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmItemSelectSizeW {
+            get {
+                return ((int)(this["FrmItemSelectSizeW"]));
+            }
+            set {
+                this["FrmItemSelectSizeW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmItemSelectSizeH {
+            get {
+                return ((int)(this["FrmItemSelectSizeH"]));
+            }
+            set {
+                this["FrmItemSelectSizeH"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmEditCostLocX {
+            get {
+                return ((int)(this["FrmEditCostLocX"]));
+            }
+            set {
+                this["FrmEditCostLocX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmEditCostLocY {
+            get {
+                return ((int)(this["FrmEditCostLocY"]));
+            }
+            set {
+                this["FrmEditCostLocY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmEditCostSizeW {
+            get {
+                return ((int)(this["FrmEditCostSizeW"]));
+            }
+            set {
+                this["FrmEditCostSizeW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmEditCostSizeH {
+            get {
+                return ((int)(this["FrmEditCostSizeH"]));
+            }
+            set {
+                this["FrmEditCostSizeH"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmMainLocX {
+            get {
+                return ((int)(this["FrmMainLocX"]));
+            }
+            set {
+                this["FrmMainLocX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmMainLocY {
+            get {
+                return ((int)(this["FrmMainLocY"]));
+            }
+            set {
+                this["FrmMainLocY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmMainSizeW {
+            get {
+                return ((int)(this["FrmMainSizeW"]));
+            }
+            set {
+                this["FrmMainSizeW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FrmMainSizeH {
+            get {
+                return ((int)(this["FrmMainSizeH"]));
+            }
+            set {
+                this["FrmMainSizeH"] = value;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.Formula.Functions;
+using NPOI.Util.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static ExcelReaderUtility.ProductReader;
+using System.Drawing;
 
 internal class Utility
 {
@@ -68,5 +70,39 @@ internal class Utility
         s = s.Replace("\n", "");
         return s.Replace("\r", "");
     }
+
+    public static void LoadUserSetting(Form frm,
+                                int settingLocX, int settingLocY,
+                                int settingSizeW, int settingSizeH
+                                )
+    {
+        //setting情報
+        int WinX = settingLocX;
+        int WinY = settingLocY;
+
+        if (WinX < 0)
+        {   //小さすぎたら補正
+            WinX = 0;
+        }
+        if (WinY < 0)
+        {   //小さすぎたら補正
+            WinY = 0;
+        }
+        frm.Location = new Point(WinX, WinY);
+
+        int SizeW = settingSizeW;
+        int SizeH = settingSizeH;
+        if (SizeW < 200)
+        {   //小さすぎたら補正
+            SizeW = frm.Size.Width;
+        }
+        if (SizeH < 200)
+        {   //小さすぎたら補正
+            SizeH = frm.Size.Height;
+        }
+        frm.Size = new Size(SizeW, SizeH);
+
+    }
+
 }
 

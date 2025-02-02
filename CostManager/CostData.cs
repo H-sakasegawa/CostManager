@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using ExcelReaderUtility;
 using NPOI.SS.Formula.Eval;
+using NPOI.SS.Formula.Functions;
 using static CostManager.MaterialCost;
 
 namespace CostManager
@@ -20,7 +21,7 @@ namespace CostManager
         {
             ListCostDatas.Add(cost);
         }
-        public List<CostData> ListCostDatas { get; set; }= new List<CostData>();
+        public List<CostData> ListCostDatas { get; set; } = new List<CostData>();
     }
 
 
@@ -79,7 +80,7 @@ namespace CostManager
             LstMaterialCost.Add(new MaterialCost("3", 33, costReader));
             LstMaterialCost.Add(new MaterialCost("4", 44, costReader));
 
-            LstWorkerCost.Add(new WorkerCost("1", 0, costReader)); 
+            LstWorkerCost.Add(new WorkerCost("1", 0, costReader));
             LstWorkerCost.Add(new WorkerCost("2", 0, costReader));
 
             LstPackageCost.Add(new PackageCost("1", ProductNum, costReader));
@@ -123,9 +124,9 @@ namespace CostManager
         /// 
         /// </summary>
         /// <param name="costRate">原価率(%)</param>
-        /// <param name="rowCost">原材料(%)</param>
-        /// <param name="laborCost">人件費(%)</param>
-        /// <param name="packageCost">包装費(%)</param>
+        /// <param name="rowCostRate">原材料(%)</param>
+        /// <param name="laborCostRate">人件費(%)</param>
+        /// <param name="packageCostRate">包装費(%)</param>
         /// <param name="profit">利益</param>
         /// <returns> 0..正常 -1..原価割れ</returns>
         public int Calc(out float costRate, out float rowCostRate, out float laborCostRate, out float packageCostRate, out float profit)
@@ -145,7 +146,7 @@ namespace CostManager
 
             //原価
             var cost = rowCost + laborCost + packageCost;
-            if( Price < cost)
+            if (Price < cost)
             {
                 //原価割れ
                 return -1;
@@ -185,6 +186,16 @@ namespace CostManager
         {
             return GetMateralCost() + GetWorkerCost() + GetPackageCost();
         }
+        //単価
+        public float GetCostOne()
+        {
+            //製品単価
+            if (ProductNum <= 0)
+            {
+                return 0;
+            }
+            return (GetAllCost() / ProductNum);
+        }
         /// <summary>
         /// 原価率
         /// </summary>
@@ -221,6 +232,11 @@ namespace CostManager
             var profit = GetProfit();
             //利益（n個販売時の定価 - n個販売時の定価定価　 *原価率)
             return profit / Price;
+        }
+        //原価割れ判定
+        public bool IsBelowCost()
+        {
+            return GetAllCost() > Price ? true : false;
         }
 
         public void CopyTo(CostData data)
@@ -263,8 +279,6 @@ namespace CostManager
     [Serializable]
     public class MaterialCost : CostBase
     {
-
-
         /// <summary>
         /// 原材料ID
         /// </summary>
@@ -275,15 +289,12 @@ namespace CostManager
         public uint AmountUsed { get; set; } = 0;
 
         public MaterialCost() { }
-        public MaterialCost(string materialId, uint amountUsed, CostReader costBaseInfo):
+        public MaterialCost(string materialId, uint amountUsed, CostReader costBaseInfo) :
             base(costBaseInfo)
         {
             this.ID = materialId;
             this.AmountUsed = amountUsed;
         }
-
-
-
         /// <summary>
         /// 費用計算
         /// </summary>
@@ -295,7 +306,34 @@ namespace CostManager
             if (value == null) return 0;
             return value.cost * AmountUsed;
         }
-    }
+        public string GetKind()
+        {
+            var value = costBaseInfo.GetMaterialtDataByID(ID);
+            if (value == null) return null;
+            return value.kind;
+        }
+        public string GetName()
+        {
+            var value = costBaseInfo.GetMaterialtDataByID(ID);
+            if (value == null) return null;
+            return value.name;
+        }
+        public uint GetUsedAmount()
+        {
+            var value = costBaseInfo.GetMaterialtDataByID(ID);
+            if (value == null) return 0;
+            return value.gram;
+        }
+        /// <summary>
+        /// 原材料１個辺りの原価
+        /// </summary>
+        public uint GetCost()
+        {
+            var value = costBaseInfo.GetMaterialtDataByID(ID);
+            if (value == null) return 0;
+            return value.cost;
+        }
+}
 
     /// <summary>
     /// 人件費
@@ -320,8 +358,6 @@ namespace CostManager
             //this.name = name;
             this.WorkingTime = workingTime;
         }
-
-
         /// <summary>
         /// 費用計算
         /// </summary>
@@ -333,6 +369,12 @@ namespace CostManager
             if (value == null) return 0;
             float costPerMin = (float)value.hourlyPay / 60;   //分給
             return (float)WorkingTime * costPerMin; //作業時間(分) ×1分当たりの費用
+        }
+        public string GetName()
+        {
+            var value = costBaseInfo.GetWorkerDataByID(ID);
+            if (value == null) return null;
+            return value.name;
         }
 
     }
@@ -360,7 +402,7 @@ namespace CostManager
             //this.name = name;
             this.RequiredNum = requiredNum;
         }
-            /// <summary>
+        /// <summary>
         /// 費用計算
         /// </summary>
         /// <returns></returns>
@@ -372,6 +414,15 @@ namespace CostManager
 
             return value.cost * num;
         }
-
-    }
+        public float CalcCost()
+        {
+            //包装材から包装材情報の費用を取得
+            return CalcCost(RequiredNum);
+        }
+        public string GetName()
+        {
+            var value = costBaseInfo.GetPackageDataByID(ID);
+            if (value == null) return null;
+            return value.name;
+        }    }
 }

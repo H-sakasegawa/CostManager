@@ -1,5 +1,4 @@
-﻿using ExcelReaderUtility;
-using NPOI.SS.Formula.Functions;
+﻿using NPOI.SS.Formula.Functions;
 using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ExcelReaderUtility;
+
 using static ExcelReaderUtility.CostReader;
 
 namespace CostManager
@@ -39,20 +40,24 @@ namespace CostManager
             COST,
         }
 
-        CostReader costBaseInfo;
+        ProductReader productReader;
+        CostReader costReader;
         CostData costData;
         CostData costDataBk = new CostData();
-        public FormEditCost(CostData costData, CostReader costBaseInfo)
+        public FormEditCost(CostData costData, CostReader costReader, ProductReader productReader)
         {
             InitializeComponent();
             this.costData = costData;
             costData.CopyTo( costDataBk );
 
-            this.costBaseInfo = costBaseInfo;
+            this.costReader = costReader;
+            this.productReader = productReader;
         }
 
         private void FormEditCost_Load(object sender, EventArgs e)
         {
+            LoadUserSetting();
+
             splitContainer1.Dock = DockStyle.Fill;
             splitContainer2.Dock = DockStyle.Fill;
             splitContainer3.Dock = DockStyle.Fill;
@@ -76,6 +81,29 @@ namespace CostManager
 
         }
 
+        private void FormEditCost_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveUserSetting();
+        }
+
+
+        private void LoadUserSetting()
+        {
+            Utility.LoadUserSetting(this,
+                                   Properties.Settings.Default.FrmEditCostLocX,
+                                   Properties.Settings.Default.FrmEditCostLocY,
+                                   Properties.Settings.Default.FrmEditCostSizeW,
+                                   Properties.Settings.Default.FrmEditCostSizeH
+                                   );
+        }
+        private void SaveUserSetting()
+        {
+            Properties.Settings.Default.FrmEditCostLocX = this.Location.X;
+            Properties.Settings.Default.FrmEditCostLocY = this.Location.Y;
+            Properties.Settings.Default.FrmEditCostSizeW = this.Size.Width;
+            Properties.Settings.Default.FrmEditCostSizeH = this.Size.Height;
+            Properties.Settings.Default.Save();
+        }
         void DispCostData()
         {
             lblProductName.Text = Utility.RemoveCRLF(costData.ProductName);
@@ -92,7 +120,7 @@ namespace CostManager
             foreach (var val in costData.LstMaterialCost)
             {
                 //原材料IDから原材料情報を取得
-                var material = costBaseInfo.GetMaterialtDataByID(val.ID);
+                var material = costReader.GetMaterialtDataByID(val.ID);
                 int index = grdRowMaterial.Rows.Add();
                 var row = grdRowMaterial.Rows[index];
                 grdRowMaterial.Columns[(int)COL_MATERIAL.AMOUNT].DefaultCellStyle.BackColor = Color.LightBlue;
@@ -108,7 +136,7 @@ namespace CostManager
             foreach (var val in costData.LstWorkerCost)
             {
                 //作業者名から作業者情報を取得
-                var worker = costBaseInfo.GetWorkerDataByID(val.ID);
+                var worker = costReader.GetWorkerDataByID(val.ID);
                 int index = grdWorker.Rows.Add();
                 var row = grdWorker.Rows[index];
                 grdWorker.Columns[(int)COL_WORKER.TIME].DefaultCellStyle.BackColor = Color.LightBlue;
@@ -124,7 +152,7 @@ namespace CostManager
             foreach (var val in costData.LstPackageCost)
             {
                 //包装材から包装材情報を取得
-                var package = costBaseInfo.GetPackageDataByID(val.ID);
+                var package = costReader.GetPackageDataByID(val.ID);
                 int index = grdPackage.Rows.Add();
                 var row = grdPackage.Rows[index];
 
@@ -152,13 +180,8 @@ namespace CostManager
             //総原価
             lblCostAll.Text = costData.GetAllCost().ToString("C");
             //製品単価
-            if (costData.ProductNum > 0)
-            {
-                lblCostOne.Text = (costAll / costData.ProductNum).ToString("C");
-            }else
-            {
-                lblCostOne.Text = (0).ToString();
-            }
+            lblCostOne.Text = costData.GetCostOne().ToString("C");
+
             var allCost = costData.GetAllCost();
             if (allCost < costData.Price && costData.Price!=0)
             {
@@ -177,8 +200,19 @@ namespace CostManager
                 //利益率
                 lblProfitRate.Text = (0).ToString("P2");// "%"
             }
+            var product = productReader.GetProductDataByID(costData.ProductId);
+
+            //栄養成分
+            lblCalorie.Text = product.Calorie;
+            lblProtein.Text = product.Protein;
+            lblLipids.Text = product.Lipids;
+            lblCarbohydrates.Text = product.Carbohydrates;
+            lblSalt.Text = product.Salt;
         }
 
+        //============================================================
+        //  原材料
+        //============================================================
         /// <summary>
         /// 原材料追加
         /// </summary>
@@ -186,7 +220,7 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnAddMaterial_Click(object sender, EventArgs e)
         {
-            FormItemSelector frm = new FormItemSelector( this, costBaseInfo.GetMaterialList());
+            FormItemSelector frm = new FormItemSelector( this, costReader.GetMaterialList());
             frm.ShowDialog();
         }
         /// <summary>
@@ -206,6 +240,192 @@ namespace CostManager
             UpdateLabelData();
         }
 
+
+        /// <summary>
+        /// 原材料一覧からの追加要求処理
+        /// </summary>
+        /// <param name="data"></param>
+        public bool AddMaterial(MaterialData data)
+        {
+            //重複チェック
+            if(costData.LstMaterialCost.Find(x=> x.ID == data.id)!=null)
+            {
+                Utility.MessageError($"同じ原材料が登録済みです。\n\n{data.name}");
+                return false;
+            }
+            MaterialCost cost = new MaterialCost(data.id, 0, costReader);
+            costData.LstMaterialCost.Add(cost);
+
+            var index = grdRowMaterial.Rows.Add();
+            var row = grdRowMaterial.Rows[index];
+
+            row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
+            row.Cells[(int)COL_MATERIAL.KIND].Value = data.kind;
+            row.Cells[(int)COL_MATERIAL.NAME].Value = data.name;
+            row.Tag = cost;
+
+            //ラベル情報更新
+            UpdateLabelData();
+
+            return true;
+
+
+        }
+        /// <summary>
+        /// 原材料 資料量変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void grdRowMaterial_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (e.ColumnIndex == (int)COL_MATERIAL.AMOUNT)
+            {
+                var row = grdRowMaterial.Rows[e.RowIndex];
+                MaterialCost data = (MaterialCost)row.Tag;
+                data.AmountUsed = Convert.ToUInt32(row.Cells[e.ColumnIndex].Value);
+
+                row.Cells[(int)COL_MATERIAL.COST].Value = data.CalcCost();
+            }
+            //ラベル情報更新
+            UpdateLabelData();
+        }
+        //============================================================
+        //  作業者
+        //============================================================
+        /// <summary>
+        /// 作業者追加
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAddWorker_Click(object sender, EventArgs e)
+        {
+            FormItemSelector frm = new FormItemSelector(this, costReader.GetWorkerList());
+            frm.ShowDialog();
+        }
+        /// <summary>
+        /// 作業者削除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDelWorker_Click(object sender, EventArgs e)
+        {
+            var rows = GetSelectRows(grdWorker.Rows);
+            foreach (var row in rows)
+            {
+                costData.LstWorkerCost.Remove((WorkerCost)row.Tag);
+                grdWorker.Rows.Remove(row);
+            }
+            //ラベル情報更新
+            UpdateLabelData();
+        }
+        /// <summary>
+        /// 作業者一覧からの追加要求処理
+        /// </summary>
+        /// <param name="data"></param>
+        public void AddWorker(WorkerData data)
+        {
+            WorkerCost cost = new WorkerCost(data.id, 0, costReader);
+            costData.LstWorkerCost.Add(cost);
+
+            var index = grdRowMaterial.Rows.Add();
+            var row = grdRowMaterial.Rows[index];
+
+            row.Cells[(int)COL_WORKER.CHECK].Value = false;
+            row.Cells[(int)COL_WORKER.NAME].Value = data.name;
+            row.Tag = cost;
+            //ラベル情報更新
+            UpdateLabelData();
+
+        }
+        /// <summary>
+        /// 作業者 作業時間変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void grdWorker_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            if (e.ColumnIndex == (int)COL_WORKER.TIME)
+            {
+                var row = grdWorker.Rows[e.RowIndex];
+                WorkerCost data = (WorkerCost)row.Tag;
+                data.WorkingTime = Convert.ToUInt32(row.Cells[e.ColumnIndex].Value);
+
+                row.Cells[(int)COL_WORKER.COST].Value = data.CalcCost();
+            }
+            //ラベル情報更新
+            UpdateLabelData();
+        }
+        //============================================================
+        //  包装材
+        //============================================================
+        /// <summary>
+        /// 包装材追加
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAddPackage_Click(object sender, EventArgs e)
+        {
+            FormItemSelector frm = new FormItemSelector(this, costReader.GetPackageList());
+            frm.ShowDialog();
+        }
+        /// <summary>
+        /// 包装材削除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDelPackage_Click(object sender, EventArgs e)
+        {
+            var rows = GetSelectRows(grdPackage.Rows);
+            foreach (var row in rows)
+            {
+                costData.LstPackageCost.Remove((PackageCost)row.Tag);
+                grdPackage.Rows.Remove(row);
+            }
+            //ラベル情報更新
+            UpdateLabelData();
+        }
+
+        /// <summary>
+        /// 包装材一覧からの追加要求処理
+        /// </summary>
+        /// <param name="data"></param>
+        public bool AddPackage(PackageData data)
+        {
+            //重複チェック
+            if (costData.LstPackageCost.Find(x => x.ID == data.id) != null)
+            {
+                Utility.MessageError($"同じ包装材が登録済みです。\n\n{data.name}");
+                return false;
+            }
+
+
+            PackageCost cost = new PackageCost(data.id, 0, costReader);
+            costData.LstPackageCost.Add(cost);
+
+            var index = grdRowMaterial.Rows.Add();
+            var row = grdRowMaterial.Rows[index];
+
+            row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
+            row.Cells[(int)COL_PACKAGE.NAME].Value = data.name;
+            row.Tag = cost;
+            //ラベル情報更新
+            UpdateLabelData();
+
+            return true;
+        }
+
+        //=============================================================
+        //=============================================================
+        //=============================================================
+
+        /// <summary>
+        /// グリッドの選択行一覧取得
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         List<DataGridViewRow> GetSelectRows(DataGridViewRowCollection rows)
         {
             List<DataGridViewRow> lstRows = new List<DataGridViewRow>();
@@ -231,117 +451,6 @@ namespace CostManager
             }
             return lstRows;
         }
-        /// <summary>
-        /// 作業者追加
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnAddWorker_Click(object sender, EventArgs e)
-        {
-            FormItemSelector frm = new FormItemSelector(this, costBaseInfo.GetWorkerList());
-            frm.ShowDialog();
-        }
-        /// <summary>
-        /// 作業者削除
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnDelWorker_Click(object sender, EventArgs e)
-        {
-            var rows = GetSelectRows(grdWorker.Rows);
-            foreach (var row in rows)
-            {
-                costData.LstWorkerCost.Remove((WorkerCost)row.Tag);
-                grdWorker.Rows.Remove(row);
-            }
-            //ラベル情報更新
-            UpdateLabelData();
-        }
-        /// <summary>
-        /// 包装材追加
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnAddPackage_Click(object sender, EventArgs e)
-        {
-            FormItemSelector frm = new FormItemSelector(this, costBaseInfo.GetPackageList());
-            frm.ShowDialog();
-        }
-        /// <summary>
-        /// 包装材削除
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnDelPackage_Click(object sender, EventArgs e)
-        {
-            var rows = GetSelectRows(grdPackage.Rows);
-            foreach (var row in rows)
-            {
-                costData.LstPackageCost.Remove((PackageCost)row.Tag);
-                grdPackage.Rows.Remove(row);
-            }
-            //ラベル情報更新
-            UpdateLabelData();
-        }
-        /// <summary>
-        /// 原材料一覧からの追加要求処理
-        /// </summary>
-        /// <param name="data"></param>
-        public void AddMaterial(MaterialData data)
-        {
-            MaterialCost cost = new MaterialCost(data.id, 0, costBaseInfo);
-            costData.LstMaterialCost.Add(cost);
-
-            var index = grdRowMaterial.Rows.Add();
-            var row = grdRowMaterial.Rows[index];
-
-            row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
-            row.Cells[(int)COL_MATERIAL.KIND].Value = data.kind;
-            row.Cells[(int)COL_MATERIAL.NAME].Value = data.name;
-            row.Tag = cost;
-
-            //ラベル情報更新
-            UpdateLabelData();
-
-
-        }
-        /// <summary>
-        /// 作業者一覧からの追加要求処理
-        /// </summary>
-        /// <param name="data"></param>
-        public void AddWorker(WorkerData data)
-        {
-            WorkerCost cost = new WorkerCost(data.id, 0, costBaseInfo);
-            costData.LstWorkerCost.Add(cost);
-
-            var index = grdRowMaterial.Rows.Add();
-            var row = grdRowMaterial.Rows[index];
-
-            row.Cells[(int)COL_WORKER.CHECK].Value = false;
-            row.Cells[(int)COL_WORKER.NAME].Value = data.name;
-            row.Tag = cost;
-            //ラベル情報更新
-            UpdateLabelData();
-
-        }
-        /// <summary>
-        /// 包装材一覧からの追加要求処理
-        /// </summary>
-        /// <param name="data"></param>
-        public void AddPackage(PackageData data)
-        {
-            PackageCost cost = new PackageCost(data.id, 0, costBaseInfo);
-            costData.LstPackageCost.Add(cost);
-
-            var index = grdRowMaterial.Rows.Add();
-            var row = grdRowMaterial.Rows[index];
-
-            row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
-            row.Cells[(int)COL_PACKAGE.NAME].Value = data.name;
-            row.Tag = cost;
-            //ラベル情報更新
-            UpdateLabelData();
-        }
 
         /// <summary>
         /// OKボタン
@@ -366,45 +475,8 @@ namespace CostManager
             this.Close();
         }
 
-        /// <summary>
-        /// 原材料 資料量変更
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void grdRowMaterial_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            if (e.ColumnIndex == (int)COL_MATERIAL.AMOUNT)
-            {
-                var row = grdRowMaterial.Rows[e.RowIndex];
-                MaterialCost data = (MaterialCost)row.Tag;
-                data.AmountUsed = Convert.ToUInt32(row.Cells[e.ColumnIndex].Value);
 
-                row.Cells[(int)COL_MATERIAL.COST].Value = data.CalcCost();
-            }
-            //ラベル情報更新
-            UpdateLabelData();
-        }
-        /// <summary>
-        /// 作業者 作業時間変更
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void grdWorker_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
 
-            if (e.ColumnIndex == (int)COL_WORKER.TIME)
-            {
-                var row = grdWorker.Rows[e.RowIndex];
-                WorkerCost data = (WorkerCost)row.Tag;
-                data.WorkingTime = Convert.ToUInt32(row.Cells[e.ColumnIndex].Value);
-
-                row.Cells[(int)COL_WORKER.COST].Value = data.CalcCost();
-            }
-            //ラベル情報更新
-            UpdateLabelData();
-        }
         /// <summary>
         /// 制作数変更
         /// </summary>
