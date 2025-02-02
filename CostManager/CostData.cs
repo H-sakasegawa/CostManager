@@ -93,11 +93,11 @@ namespace CostManager
             LstWorkerCost.Add(new WorkerCost("1", 0, costReader));
             LstWorkerCost.Add(new WorkerCost("2", 0, costReader));
 
-            LstPackageCost.Add(new PackageCost("1", 1, costReader));
-            LstPackageCost.Add(new PackageCost("2", 1, costReader));
-            LstPackageCost.Add(new PackageCost("3", 1, costReader));
-            LstPackageCost.Add(new PackageCost("4", 1, costReader));
-            LstPackageCost.Add(new PackageCost("5", 1, costReader));
+            LstPackageCost.Add(new PackageCost("1", 0, costReader));
+            LstPackageCost.Add(new PackageCost("2", 0, costReader));
+            LstPackageCost.Add(new PackageCost("3", 0, costReader));
+            LstPackageCost.Add(new PackageCost("4", 0, costReader));
+            LstPackageCost.Add(new PackageCost("5", 0, costReader));
 
 #endif
 
@@ -146,6 +146,7 @@ namespace CostManager
 
             //原価
             var cost = rowCost + laborCost + packageCost;
+
             if (Price < cost)
             {
                 //原価割れ
