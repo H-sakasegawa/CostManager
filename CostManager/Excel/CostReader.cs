@@ -37,11 +37,11 @@ namespace ExcelReaderUtility
             /// <summary>
             /// 原価
             /// </summary>
-            public uint cost;
+            public float cost;
             /// <summary>
             /// 原価基準容量
             /// </summary>
-            public uint gram;
+            public float gram;
         }
         public class WorkerData
         {

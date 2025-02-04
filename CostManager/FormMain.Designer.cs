@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -35,7 +36,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLoad = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +47,12 @@
             this.chkAll = new System.Windows.Forms.CheckBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.gridList = new System.Windows.Forms.DataGridView();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbMainListKind = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolBtnSave = new System.Windows.Forms.ToolStripButton();
+            this.toolBtnPrint = new System.Windows.Forms.ToolStripButton();
             this.Column9 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,12 +63,6 @@
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbMainListKind = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolBtnSave = new System.Windows.Forms.ToolStripButton();
-            this.toolBtnPrint = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridList)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -187,6 +187,69 @@
             this.gridList.DragEnter += new System.Windows.Forms.DragEventHandler(this.gridList_DragEnter);
             this.gridList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gridList_KeyDown);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(109, 54);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "分類";
+            // 
+            // cmbMainListKind
+            // 
+            this.cmbMainListKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMainListKind.FormattingEnabled = true;
+            this.cmbMainListKind.Location = new System.Drawing.Point(142, 50);
+            this.cmbMainListKind.Name = "cmbMainListKind";
+            this.cmbMainListKind.Size = new System.Drawing.Size(118, 20);
+            this.cmbMainListKind.TabIndex = 10;
+            this.cmbMainListKind.SelectedIndexChanged += new System.EventHandler(this.cmbMainListKind_SelectedIndexChanged);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(12, 353);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(84, 30);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "商品追加";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBtnSave,
+            this.toolBtnPrint});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(881, 25);
+            this.toolStrip1.TabIndex = 15;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolBtnSave
+            // 
+            this.toolBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtnSave.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnSave.Image")));
+            this.toolBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtnSave.Name = "toolBtnSave";
+            this.toolBtnSave.Size = new System.Drawing.Size(23, 22);
+            this.toolBtnSave.Text = "toolStripButton1";
+            this.toolBtnSave.ToolTipText = "保存";
+            this.toolBtnSave.Click += new System.EventHandler(this.toolBtnSave_Click);
+            // 
+            // toolBtnPrint
+            // 
+            this.toolBtnPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtnPrint.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnPrint.Image")));
+            this.toolBtnPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtnPrint.Name = "toolBtnPrint";
+            this.toolBtnPrint.Size = new System.Drawing.Size(23, 22);
+            this.toolBtnPrint.Text = "toolStripButton1";
+            this.toolBtnPrint.ToolTipText = "印刷";
+            this.toolBtnPrint.Click += new System.EventHandler(this.toolBtnPrint_Click);
+            // 
             // Column9
             // 
             this.Column9.HeaderText = "選択";
@@ -260,7 +323,7 @@
             // Column7
             // 
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "C0";
+            dataGridViewCellStyle6.Format = "C1";
             dataGridViewCellStyle6.NullValue = null;
             this.Column7.DefaultCellStyle = dataGridViewCellStyle6;
             this.Column7.HeaderText = "定価";
@@ -271,76 +334,13 @@
             // Column8
             // 
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C0";
+            dataGridViewCellStyle7.Format = "C1";
             dataGridViewCellStyle7.NullValue = null;
             this.Column8.DefaultCellStyle = dataGridViewCellStyle7;
             this.Column8.HeaderText = "利益額";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
             this.Column8.Width = 70;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(109, 54);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "分類";
-            // 
-            // cmbMainListKind
-            // 
-            this.cmbMainListKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMainListKind.FormattingEnabled = true;
-            this.cmbMainListKind.Location = new System.Drawing.Point(142, 50);
-            this.cmbMainListKind.Name = "cmbMainListKind";
-            this.cmbMainListKind.Size = new System.Drawing.Size(118, 20);
-            this.cmbMainListKind.TabIndex = 10;
-            this.cmbMainListKind.SelectedIndexChanged += new System.EventHandler(this.cmbMainListKind_SelectedIndexChanged);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 353);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(84, 30);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "商品追加";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolBtnSave,
-            this.toolBtnPrint});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(881, 25);
-            this.toolStrip1.TabIndex = 15;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolBtnSave
-            // 
-            this.toolBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtnSave.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnSave.Image")));
-            this.toolBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtnSave.Name = "toolBtnSave";
-            this.toolBtnSave.Size = new System.Drawing.Size(23, 22);
-            this.toolBtnSave.Text = "toolStripButton1";
-            this.toolBtnSave.ToolTipText = "保存";
-            this.toolBtnSave.Click += new System.EventHandler(this.toolBtnSave_Click);
-            // 
-            // toolBtnPrint
-            // 
-            this.toolBtnPrint.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtnPrint.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnPrint.Image")));
-            this.toolBtnPrint.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtnPrint.Name = "toolBtnPrint";
-            this.toolBtnPrint.Size = new System.Drawing.Size(23, 22);
-            this.toolBtnPrint.Text = "toolStripButton1";
-            this.toolBtnPrint.ToolTipText = "印刷";
-            this.toolBtnPrint.Click += new System.EventHandler(this.toolBtnPrint_Click);
             // 
             // FormMain
             // 
@@ -387,6 +387,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuLoad;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mnuSaveAs;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolBtnSave;
+        private System.Windows.Forms.ToolStripButton toolBtnPrint;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column9;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
@@ -397,9 +400,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolBtnSave;
-        private System.Windows.Forms.ToolStripButton toolBtnPrint;
     }
 }
 

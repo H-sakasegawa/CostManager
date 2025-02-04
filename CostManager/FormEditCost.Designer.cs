@@ -145,6 +145,7 @@
             this.grdRowMaterial.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdRowMaterial.Size = new System.Drawing.Size(339, 148);
             this.grdRowMaterial.TabIndex = 10;
+            this.grdRowMaterial.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdRowMaterial_CellValidating);
             this.grdRowMaterial.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdRowMaterial_CellValueChanged);
             // 
             // Column4
@@ -170,6 +171,8 @@
             // Column2
             // 
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "N1";
+            dataGridViewCellStyle1.NullValue = null;
             this.Column2.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column2.HeaderText = "使用量(g)";
             this.Column2.Name = "Column2";
@@ -178,7 +181,7 @@
             // Column3
             // 
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "C0";
+            dataGridViewCellStyle2.Format = "C1";
             dataGridViewCellStyle2.NullValue = null;
             this.Column3.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column3.HeaderText = "費用(円)";
@@ -241,6 +244,7 @@
             this.grdWorker.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdWorker.Size = new System.Drawing.Size(290, 155);
             this.grdWorker.TabIndex = 15;
+            this.grdWorker.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdWorker_CellValidating);
             this.grdWorker.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdWorker_CellValueChanged);
             // 
             // Column5
@@ -267,7 +271,7 @@
             // dataGridViewTextBoxColumn5
             // 
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C0";
+            dataGridViewCellStyle4.Format = "C1";
             dataGridViewCellStyle4.NullValue = "False";
             this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridViewTextBoxColumn5.HeaderText = "費用(円)";
@@ -280,6 +284,7 @@
             this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
@@ -292,10 +297,10 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.splitContainer1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(447, 353);
+            this.tabPage1.Size = new System.Drawing.Size(447, 350);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "原材料";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -344,10 +349,10 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.splitContainer2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(447, 353);
+            this.tabPage2.Size = new System.Drawing.Size(447, 350);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "作業者";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -396,10 +401,10 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.splitContainer3);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(447, 353);
+            this.tabPage3.Size = new System.Drawing.Size(447, 350);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "包装材料";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -471,7 +476,7 @@
             // dataGridViewTextBoxColumn7
             // 
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C0";
+            dataGridViewCellStyle7.Format = "C1";
             dataGridViewCellStyle7.NullValue = "0";
             this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridViewTextBoxColumn7.HeaderText = "費用(円)";

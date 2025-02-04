@@ -32,7 +32,7 @@ internal class Utility
     {
         MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
-    public static DialogResult MessageConfirm(string msg, string title)
+    public static DialogResult MessageConfirm(string msg, string title= "確認")
     {
         return MessageBox.Show(msg, title, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
     }

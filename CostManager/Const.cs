@@ -32,6 +32,8 @@ namespace CostManager
 
         public const string defaultFontName = "Meiryo UI";
 
+        public const string strFmtC = "C1";
+
         /// <summary>
         /// 商品リストのホイール操作によるフォントサイズ変更値
         /// </summary>

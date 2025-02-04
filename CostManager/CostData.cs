@@ -30,6 +30,9 @@ namespace CostManager
     public class CostData
     {
 
+
+
+
         /// <summary>
         /// 商品コード
         /// </summary>
@@ -248,11 +251,53 @@ namespace CostManager
             data.ProductNum = ProductNum;
             data.Price = Price;
             data.LstMaterialCost.Clear();
-            data.LstMaterialCost.AddRange(LstMaterialCost);
+            foreach(var item in LstMaterialCost)
+            {
+                data.LstMaterialCost.Add(item.Copy());
+            }
             data.LstWorkerCost.Clear();
-            data.LstWorkerCost.AddRange(LstWorkerCost);
+            foreach (var item in LstWorkerCost)
+            {
+                data.LstWorkerCost.Add(item.Copy());
+            }
+
             data.LstPackageCost.Clear();
-            data.LstPackageCost.AddRange(LstPackageCost);
+            foreach (var item in LstPackageCost)
+            {
+                data.LstPackageCost.Add(item.Copy());
+            }
+        }
+
+
+        //同値チェック
+        public bool IsSame(CostData value)
+        {
+            if (this.ProductNum != value.ProductNum) return false;
+            if (this.LstMaterialCost.Count != value.LstMaterialCost.Count) return false;
+            if (this.LstWorkerCost.Count != value.LstWorkerCost.Count) return false;
+            if (this.LstPackageCost.Count != value.LstPackageCost.Count) return false;
+
+            foreach (var item in value.LstMaterialCost)
+            {
+                var data = LstMaterialCost.Find(x => x.ID == item.ID);
+                if (data == null) return false;
+                if (!data.IsSame(item)) return false;
+            }
+
+            foreach (var item in value.LstWorkerCost)
+            {
+                var data = LstWorkerCost.Find(x => x.ID == item.ID);
+                if (data == null) return false;
+                if (!data.IsSame(item)) return false;
+            }
+
+            foreach (var item in value.LstPackageCost)
+            {
+                var data = LstPackageCost.Find(x => x.ID == item.ID);
+                if (data == null) return false;
+                if (!data.IsSame(item)) return false;
+            }
+            return true;
         }
     }
 
@@ -268,6 +313,11 @@ namespace CostManager
         public void AttachCostReader(CostReader costBaseInfo)
         {
             this.costBaseInfo = costBaseInfo;
+        }
+
+        protected void CopyTo(CostBase data)
+        {
+            data.costBaseInfo = this.costBaseInfo;
         }
 
         [NonSerialized]
@@ -287,7 +337,7 @@ namespace CostManager
         /// <summary>
         /// 使用量(g)
         /// </summary>
-        public uint AmountUsed { get; set; } = 0;
+        public float AmountUsed { get; set; } = 0;
 
         public MaterialCost() { }
         public MaterialCost(string materialId, uint amountUsed, CostReader costBaseInfo) :
@@ -300,12 +350,12 @@ namespace CostManager
         /// 費用計算
         /// </summary>
         /// <returns></returns>
-        public uint CalcCost()
+        public float CalcCost()
         {
             //原材料IDから原材料情報の原価を取得 ★★
             var value = costBaseInfo.GetMaterialtDataByID(ID);
             if (value == null) return 0;
-            return value.cost * AmountUsed;
+            return AmountUsed * (value.cost/value.gram) ;
         }
         public string GetKind()
         {
@@ -319,7 +369,7 @@ namespace CostManager
             if (value == null) return null;
             return value.name;
         }
-        public uint GetUsedAmount()
+        public float GetUsedAmount()
         {
             var value = costBaseInfo.GetMaterialtDataByID(ID);
             if (value == null) return 0;
@@ -328,13 +378,29 @@ namespace CostManager
         /// <summary>
         /// 原材料１個辺りの原価
         /// </summary>
-        public uint GetCost()
+        public float GetCost()
         {
             var value = costBaseInfo.GetMaterialtDataByID(ID);
             if (value == null) return 0;
             return value.cost;
         }
-}
+        public MaterialCost Copy()
+        {
+            MaterialCost data = new MaterialCost();
+            base.CopyTo(data);
+            data.ID = this.ID;
+            data.AmountUsed = this.AmountUsed;
+            return data;
+        }
+
+        //同値チェック
+        public bool IsSame(MaterialCost value)
+        {
+            if( this.AmountUsed != value.AmountUsed) return false;
+
+            return true;
+        }
+    }
 
     /// <summary>
     /// 人件費
@@ -378,6 +444,21 @@ namespace CostManager
             return value.name;
         }
 
+        public WorkerCost Copy()
+        {
+            WorkerCost data = new WorkerCost();
+            base.CopyTo(data);
+            data.ID = this.ID;
+            data.WorkingTime = this.WorkingTime;
+            return data;
+        }
+        //同値チェック
+        public bool IsSame(WorkerCost value)
+        {
+            if (this.WorkingTime != value.WorkingTime) return false;
+
+            return true;
+        }
     }
     /// <summary>
     /// 包装材
@@ -425,5 +506,22 @@ namespace CostManager
             var value = costBaseInfo.GetPackageDataByID(ID);
             if (value == null) return null;
             return value.name;
-        }    }
+        }
+        public PackageCost Copy()
+        {
+            PackageCost data = new PackageCost();
+            base.CopyTo(data);
+            data.ID = this.ID;
+            data.RequiredNum = this.RequiredNum;
+            return data;
+        }
+        //同値チェック
+        public bool IsSame(PackageCost value)
+        {
+            if (this.RequiredNum != value.RequiredNum) return false;
+
+            return true;
+        }
+
+    }
 }

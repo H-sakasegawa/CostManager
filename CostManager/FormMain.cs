@@ -38,7 +38,7 @@ namespace CostManager
         ProductReader productReader = new ProductReader();
         CostReader costReader = new CostReader();
         string curCostDataFilePath = null;
-
+        bool bAltDataFlg = false;
 
         public FormMain()
         {
@@ -63,6 +63,15 @@ namespace CostManager
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (bAltDataFlg)
+            {
+                if (Utility.MessageConfirm("データが変更されています。\nアプリケーションを終了じますか？") != DialogResult.OK)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
             SaveUserSetting();
             optionData.SaveOptions();
         }
@@ -177,6 +186,9 @@ namespace CostManager
                     rows.Remove(row);
                 }
             }
+            //編集ありフラグセット
+            bAltDataFlg = true;
+
         }
 
         /// <summary>
@@ -190,6 +202,8 @@ namespace CostManager
         }
         public void AddCostDataToRow(CostData costData)
         {
+            //編集ありフラグセット
+            bAltDataFlg = true;
 
             var index = gridList.Rows.Add();
             var row = gridList.Rows[index];

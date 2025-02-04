@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using ExcelReaderUtility;
 
 using static ExcelReaderUtility.CostReader;
+using NPOI.POIFS.Crypt.Dsig;
 
 namespace CostManager
 {
@@ -83,6 +84,19 @@ namespace CostManager
 
         private void FormEditCost_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (DialogResult == DialogResult.Cancel)
+            {
+                if (!costData.IsSame(costDataBk))
+                {
+                    if (Utility.MessageConfirm("データが変更されています。\n編集画面を閉じますか？") != DialogResult.OK)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
+                costDataBk.CopyTo(costData);
+            }
+            
             SaveUserSetting();
         }
 
@@ -129,7 +143,7 @@ namespace CostManager
                 row.Cells[(int)COL_MATERIAL.KIND].Value = material.kind;
                 row.Cells[(int)COL_MATERIAL.NAME].Value = material.name;
                 row.Cells[(int)COL_MATERIAL.AMOUNT].Value = val.AmountUsed; //使用量
-                row.Cells[(int)COL_MATERIAL.COST].Value = material.cost * val.AmountUsed; //原価 × val.amountUsed
+                row.Cells[(int)COL_MATERIAL.COST].Value = val.CalcCost(); //原価 × val.amountUsed
                 row.Tag = val;
             }
             //作業者
@@ -167,20 +181,22 @@ namespace CostManager
 
         }
 
+
+
         void UpdateLabelData()
         {
             //原材料費
-            lblCostMaterial.Text = costData.GetMateralCost().ToString("C");
+            lblCostMaterial.Text = costData.GetMateralCost().ToString(Const.strFmtC);
             //人件費
-            lblCostWorker.Text = costData.GetWorkerCost().ToString("C");
+            lblCostWorker.Text = costData.GetWorkerCost().ToString(Const.strFmtC);
             //パッケージ費
-            lblCostPackage.Text = costData.GetPackageCost().ToString("C");
+            lblCostPackage.Text = costData.GetPackageCost().ToString(Const.strFmtC);
 
             var costAll = costData.GetAllCost();
             //総原価
-            lblCostAll.Text = costData.GetAllCost().ToString("C");
+            lblCostAll.Text = costData.GetAllCost().ToString(Const.strFmtC);
             //製品単価
-            lblCostOne.Text = costData.GetCostOne().ToString("C");
+            lblCostOne.Text = costData.GetCostOne().ToString(Const.strFmtC);
 
             var allCost = costData.GetAllCost();
             if (allCost < costData.Price && costData.Price!=0)
@@ -283,12 +299,26 @@ namespace CostManager
             {
                 var row = grdRowMaterial.Rows[e.RowIndex];
                 MaterialCost data = (MaterialCost)row.Tag;
-                data.AmountUsed = Convert.ToUInt32(row.Cells[e.ColumnIndex].Value);
+
+                data.AmountUsed = Convert.ToSingle(row.Cells[e.ColumnIndex].Value);
 
                 row.Cells[(int)COL_MATERIAL.COST].Value = data.CalcCost();
             }
             //ラベル情報更新
             UpdateLabelData();
+        }
+        private void grdRowMaterial_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == (int)COL_MATERIAL.AMOUNT)
+            {
+                float value = 0;
+                if (float.TryParse(e.FormattedValue.ToString(), out value) == false)
+                {
+                    Utility.MessageError("使用量の入力値が正しくありません");
+                    e.Cancel = true;
+                }
+            }
+
         }
         //============================================================
         //  作業者
@@ -357,6 +387,18 @@ namespace CostManager
             }
             //ラベル情報更新
             UpdateLabelData();
+        }
+        private void grdWorker_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == (int)COL_WORKER.TIME)
+            {
+                uint value = 0;
+                if (uint.TryParse(e.FormattedValue.ToString(), out value) == false)
+                {
+                    Utility.MessageError("作業時間の入力値は正の整数値で入力してください");
+                    e.Cancel = true;
+                }
+            }
         }
         //============================================================
         //  包装材
@@ -469,8 +511,6 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            costDataBk.CopyTo(costData);
-
             DialogResult = DialogResult.Cancel;
             this.Close();
         }
@@ -519,7 +559,7 @@ namespace CostManager
             //制作数
             costData.Price = value * costData.ProductNum;
             //定価
-            lblPriceSum.Text = costData.Price.ToString("C");
+            lblPriceSum.Text = costData.Price.ToString(Const.strFmtC);
             //ラベル情報更新
             UpdateLabelData();
 
