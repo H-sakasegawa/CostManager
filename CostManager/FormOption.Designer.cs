@@ -142,6 +142,7 @@
             this.MinimizeBox = false;
             this.Name = "FormOption";
             this.Text = "オプション";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormOption_FormClosing);
             this.Load += new System.EventHandler(this.FormOption_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

@@ -13,6 +13,7 @@ using ExcelReaderUtility;
 
 using static ExcelReaderUtility.CostReader;
 using NPOI.POIFS.Crypt.Dsig;
+using NPOI.SS.Formula.Eval;
 
 namespace CostManager
 {
@@ -45,6 +46,12 @@ namespace CostManager
         CostReader costReader;
         CostData costData;
         CostData costDataBk = new CostData();
+
+        FormItemSelector frmMaterial = null;
+        FormItemSelector frmWorker = null;
+        FormItemSelector frmPackage = null;
+
+
         public FormEditCost(CostData costData, CostReader costReader, ProductReader productReader)
         {
             InitializeComponent();
@@ -143,12 +150,12 @@ namespace CostManager
                 var row = grdRowMaterial.Rows[index];
                 grdRowMaterial.Columns[(int)COL_MATERIAL.AMOUNT].DefaultCellStyle.BackColor = Color.LightBlue;
 
+                row.Tag = val;
                 row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
                 row.Cells[(int)COL_MATERIAL.KIND].Value = material.kind;
                 row.Cells[(int)COL_MATERIAL.NAME].Value = material.ToString(bDispID);
                 row.Cells[(int)COL_MATERIAL.AMOUNT].Value = val.AmountUsed; //使用量
                 row.Cells[(int)COL_MATERIAL.COST].Value = val.CalcCost(); //原価 × val.amountUsed
-                row.Tag = val;
             }
             //作業者
             foreach (var val in costData.LstWorkerCost)
@@ -159,11 +166,11 @@ namespace CostManager
                 var row = grdWorker.Rows[index];
                 grdWorker.Columns[(int)COL_WORKER.TIME].DefaultCellStyle.BackColor = Color.LightBlue;
 
+                row.Tag = val;
                 row.Cells[(int)COL_WORKER.CHECK].Value = false;
                 row.Cells[(int)COL_WORKER.NAME].Value = worker.ToString(bDispID);
                 row.Cells[(int)COL_WORKER.TIME].Value = val.WorkingTime; //時間（分)
                 row.Cells[(int)COL_WORKER.COST].Value = (float)(worker.hourlyPay / 60.0) * val.WorkingTime; //時給 / 60 × val.workingTime
-                row.Tag = val;
             }
 
             //包装材
@@ -174,11 +181,11 @@ namespace CostManager
                 int index = grdPackage.Rows.Add();
                 var row = grdPackage.Rows[index];
 
+                row.Tag = val;
                 row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
                 row.Cells[(int)COL_PACKAGE.NAME].Value = package.ToString(bDispID);
                 row.Cells[(int)COL_PACKAGE.NUM].Value = val.RequiredNum; //必要数
                 row.Cells[(int)COL_PACKAGE.COST].Value = package.cost * val.RequiredNum; //単価 × val.requiredNum
-                row.Tag = val;
             }
             //ラベル情報更新
             UpdateLabelData();
@@ -236,8 +243,12 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnAddMaterial_Click(object sender, EventArgs e)
         {
-            FormItemSelector frm = new FormItemSelector( this, costReader.GetMaterialList());
-            frm.ShowDialog();
+            if (frmMaterial== null || frmMaterial.IsDisposed)
+            {
+                frmMaterial = new FormItemSelector(this, costReader.GetMaterialList());
+            }
+            frmMaterial.Show();
+            frmMaterial.TopMost = true;
         }
         /// <summary>
         /// 原材料削除
@@ -246,7 +257,7 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnDelMaterial_Click(object sender, EventArgs e)
         {
-            var rows = GetSelectRows(grdRowMaterial.Rows);
+            var rows = GetSelectRows(grdRowMaterial);
             foreach( var row in rows)
             {
                 costData.LstMaterialCost.Remove((MaterialCost)row.Tag);
@@ -275,10 +286,11 @@ namespace CostManager
             var index = grdRowMaterial.Rows.Add();
             var row = grdRowMaterial.Rows[index];
 
+            row.Tag = cost;
             row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
             row.Cells[(int)COL_MATERIAL.KIND].Value = data.kind;
             row.Cells[(int)COL_MATERIAL.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
-            row.Tag = cost;
+            row.Cells[(int)COL_MATERIAL.AMOUNT].Value = 0;
 
             //ラベル情報更新
             UpdateLabelData();
@@ -330,8 +342,12 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnAddWorker_Click(object sender, EventArgs e)
         {
-            FormItemSelector frm = new FormItemSelector(this, costReader.GetWorkerList());
-            frm.ShowDialog();
+            if (frmWorker == null || frmWorker.IsDisposed)
+            {
+                frmWorker = new FormItemSelector(this, costReader.GetWorkerList());
+            }
+            frmWorker.Show();
+            frmWorker.TopMost = true;
         }
         /// <summary>
         /// 作業者削除
@@ -340,7 +356,7 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnDelWorker_Click(object sender, EventArgs e)
         {
-            var rows = GetSelectRows(grdWorker.Rows);
+            var rows = GetSelectRows(grdWorker);
             foreach (var row in rows)
             {
                 costData.LstWorkerCost.Remove((WorkerCost)row.Tag);
@@ -358,12 +374,13 @@ namespace CostManager
             WorkerCost cost = new WorkerCost(data.id, 0, costReader);
             costData.LstWorkerCost.Add(cost);
 
-            var index = grdRowMaterial.Rows.Add();
-            var row = grdRowMaterial.Rows[index];
+            var index = grdWorker.Rows.Add();
+            var row = grdWorker.Rows[index];
 
+            row.Tag = cost;
             row.Cells[(int)COL_WORKER.CHECK].Value = false;
             row.Cells[(int)COL_WORKER.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
-            row.Tag = cost;
+            row.Cells[(int)COL_WORKER.TIME].Value = 0;
             //ラベル情報更新
             UpdateLabelData();
 
@@ -410,8 +427,14 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnAddPackage_Click(object sender, EventArgs e)
         {
-            FormItemSelector frm = new FormItemSelector(this, costReader.GetPackageList());
-            frm.ShowDialog();
+
+            if (frmPackage == null || frmPackage.IsDisposed)
+            {
+                frmPackage = new FormItemSelector(this, costReader.GetPackageList());
+            }
+            frmPackage.Show();
+            frmPackage.TopMost = true;
+
         }
         /// <summary>
         /// 包装材削除
@@ -420,7 +443,7 @@ namespace CostManager
         /// <param name="e"></param>
         private void btnDelPackage_Click(object sender, EventArgs e)
         {
-            var rows = GetSelectRows(grdPackage.Rows);
+            var rows = GetSelectRows(grdPackage);
             foreach (var row in rows)
             {
                 costData.LstPackageCost.Remove((PackageCost)row.Tag);
@@ -444,15 +467,17 @@ namespace CostManager
             }
 
 
-            PackageCost cost = new PackageCost(data.id, 0, costReader);
-            costData.LstPackageCost.Add(cost);
+            PackageCost packageCost = new PackageCost(data.id, costData.ProductNum, costReader);
+            costData.LstPackageCost.Add(packageCost);
 
-            var index = grdRowMaterial.Rows.Add();
-            var row = grdRowMaterial.Rows[index];
+            var index = grdPackage.Rows.Add();
+            var row = grdPackage.Rows[index];
 
+            row.Tag = packageCost;
             row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
             row.Cells[(int)COL_PACKAGE.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
-            row.Tag = cost;
+            row.Cells[(int)COL_PACKAGE.NUM].Value = costData.ProductNum;
+            row.Cells[(int)COL_PACKAGE.COST].Value = data.cost * costData.ProductNum; //単価 × val.requiredNum;
             //ラベル情報更新
             UpdateLabelData();
 
@@ -468,8 +493,9 @@ namespace CostManager
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        List<DataGridViewRow> GetSelectRows(DataGridViewRowCollection rows)
+        List<DataGridViewRow> GetSelectRows(DataGridView grid)
         {
+            var rows = grid.Rows;
             List<DataGridViewRow> lstRows = new List<DataGridViewRow>();
             for (int iRow = 0; iRow < rows.Count; iRow++)
             {
@@ -482,7 +508,7 @@ namespace CostManager
             }
             if (lstRows.Count <= 0)
             {
-                var selectRows = grdRowMaterial.SelectedRows;
+                var selectRows = grid.SelectedRows;
                 if (selectRows != null)
                 {
                     for (int i = 0; i < selectRows.Count; i++)

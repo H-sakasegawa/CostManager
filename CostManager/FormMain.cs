@@ -339,22 +339,14 @@ namespace CostManager
         FormItemSelector frm = null;
         private void button1_Click(object sender, EventArgs e)
         {
-            if (frm != null)
-            {
 
-                try
-                {
-                    if (!frm.IsDisposed)
-                    {
-                        frm.Visible = false;
-                        frm.Show(this);
-                        return;
-                    }
-                }
-                catch { }
+            if (frm == null || frm.IsDisposed)
+            {
+                frm = new FormItemSelector(this, Global.productReader);
             }
-            frm = new FormItemSelector(this, Global.productReader);
-            frm.Show(this);
+            frm.Show();
+            frm.TopMost = true;
+
         }
 
         private void chkAll_CheckedChanged(object sender, EventArgs e)

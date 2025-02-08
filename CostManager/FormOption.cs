@@ -24,6 +24,10 @@ namespace CostManager
             txtDataBasePath.Text = Global.optionData.DataBasePath;
             chkDispIDtoList.Checked = Global.optionData.DispIDtoList;
         }
+        private void FormOption_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Global.optionData.SaveOptions();
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -59,5 +63,6 @@ namespace CostManager
         {
             Global.optionData.DispIDtoList = chkDispIDtoList.Checked;
         }
+
     }
 }
