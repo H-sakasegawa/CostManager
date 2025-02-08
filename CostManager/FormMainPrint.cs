@@ -61,7 +61,7 @@ namespace CostManager
 
         float A4HeightMM = 0;
         float A4WidthMM = 0;
-        float PrintGapLeft = 10; 
+        float PrintGapLeft = 8; 
         float PrintGapTop = 10;
         float rowHeight = 4; //表のセルの高さ
         float FooterHeight = 15;
@@ -390,7 +390,7 @@ namespace CostManager
 
             //栄養成分
             y += 3;
-            var product = productReader.GetProductDataByID(costData.ProductId);
+            var product = Global.productReader.GetProductDataByID(costData.ProductId);
             y = util.DrawTitle(x, y, rowHeight, "■栄養成分", Color.Black);
             DrawCostInfo_Sub(util, ref x, ref y, "熱量", product.Calorie);
             DrawCostInfo_Sub(util, ref x, ref y, "タンパク質", product.Protein);

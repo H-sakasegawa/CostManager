@@ -274,7 +274,7 @@
             // 
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.Column2.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column2.HeaderText = "制作数";
+            this.Column2.HeaderText = "製作数";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
             this.Column2.Width = 70;
@@ -323,24 +323,24 @@
             // Column7
             // 
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "C1";
+            dataGridViewCellStyle6.Format = "C0";
             dataGridViewCellStyle6.NullValue = null;
             this.Column7.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Column7.HeaderText = "定価";
+            this.Column7.HeaderText = "定価(1個)";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
-            this.Column7.Width = 70;
+            this.Column7.Width = 80;
             // 
             // Column8
             // 
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C1";
+            dataGridViewCellStyle7.Format = "C0";
             dataGridViewCellStyle7.NullValue = null;
             this.Column8.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Column8.HeaderText = "利益額";
+            this.Column8.HeaderText = "利益額(1個)";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
-            this.Column8.Width = 70;
+            this.Column8.Width = 95;
             // 
             // FormMain
             // 

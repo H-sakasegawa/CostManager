@@ -86,9 +86,10 @@ namespace ExcelReaderUtility
 
 
 
-            public override string ToString()
+            public string ToString(bool bDisId)
             {
-                return $"({id}) {name}";
+                if (bDisId) { return $"({id}) {name}"; }
+                return name;
             }
         }
 
@@ -302,7 +303,7 @@ namespace ExcelReaderUtility
         /// 商品名一覧取得
         /// </summary>
         /// <returns></returns>
-        public List<ProductData> GetProductList(string kind)
+        public List<ProductData> GetProductList(string kind= Const.SelectAll)
         {
             List<ProductData> lst;
             if (kind == Const.SelectAll)

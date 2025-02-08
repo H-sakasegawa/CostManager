@@ -178,5 +178,197 @@ namespace CostManager.Properties {
                 this["FrmMainSizeH"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public float ItemSelectFontSize {
+            get {
+                return ((float)(this["ItemSelectFontSize"]));
+            }
+            set {
+                this["ItemSelectFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public float ProductListFontSize {
+            get {
+                return ((float)(this["ProductListFontSize"]));
+            }
+            set {
+                this["ProductListFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public int ItemSelectColChkW {
+            get {
+                return ((int)(this["ItemSelectColChkW"]));
+            }
+            set {
+                this["ItemSelectColChkW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public int ItemSelectColKindW {
+            get {
+                return ((int)(this["ItemSelectColKindW"]));
+            }
+            set {
+                this["ItemSelectColKindW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int ItemSelectColNameW {
+            get {
+                return ((int)(this["ItemSelectColNameW"]));
+            }
+            set {
+                this["ItemSelectColNameW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public int ProductListColChkW {
+            get {
+                return ((int)(this["ProductListColChkW"]));
+            }
+            set {
+                this["ProductListColChkW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public int ProductListColKindW {
+            get {
+                return ((int)(this["ProductListColKindW"]));
+            }
+            set {
+                this["ProductListColKindW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int ProductListColNameW {
+            get {
+                return ((int)(this["ProductListColNameW"]));
+            }
+            set {
+                this["ProductListColNameW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public int ProductListColNumW {
+            get {
+                return ((int)(this["ProductListColNumW"]));
+            }
+            set {
+                this["ProductListColNumW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int ProductListColCostRateW {
+            get {
+                return ((int)(this["ProductListColCostRateW"]));
+            }
+            set {
+                this["ProductListColCostRateW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int ProductListColMaterialW {
+            get {
+                return ((int)(this["ProductListColMaterialW"]));
+            }
+            set {
+                this["ProductListColMaterialW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int ProductListColWorkerlW {
+            get {
+                return ((int)(this["ProductListColWorkerlW"]));
+            }
+            set {
+                this["ProductListColWorkerlW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int ProductListColPackageW {
+            get {
+                return ((int)(this["ProductListColPackageW"]));
+            }
+            set {
+                this["ProductListColPackageW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int ProductListColPriceW {
+            get {
+                return ((int)(this["ProductListColPriceW"]));
+            }
+            set {
+                this["ProductListColPriceW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("95")]
+        public int ProductListColProfitW {
+            get {
+                return ((int)(this["ProductListColProfitW"]));
+            }
+            set {
+                this["ProductListColProfitW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DispIDtoList {
+            get {
+                return ((bool)(this["DispIDtoList"]));
+            }
+            set {
+                this["DispIDtoList"] = value;
+            }
+        }
     }
 }

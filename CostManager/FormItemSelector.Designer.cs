@@ -38,6 +38,7 @@
             this.lblKind = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdProductNames)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,7 +60,7 @@
             this.grdProductNames.RowHeadersVisible = false;
             this.grdProductNames.RowTemplate.Height = 21;
             this.grdProductNames.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdProductNames.Size = new System.Drawing.Size(298, 399);
+            this.grdProductNames.Size = new System.Drawing.Size(339, 399);
             this.grdProductNames.TabIndex = 9;
             this.grdProductNames.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdProductNames_CellDoubleClick);
             this.grdProductNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.grdProductNames_KeyDown);
@@ -86,7 +87,7 @@
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Location = new System.Drawing.Point(135, 433);
+            this.btnAdd.Location = new System.Drawing.Point(176, 433);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(84, 30);
             this.btnAdd.TabIndex = 8;
@@ -98,16 +99,16 @@
             // 
             this.cmbKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbKind.FormattingEnabled = true;
-            this.cmbKind.Location = new System.Drawing.Point(181, 2);
+            this.cmbKind.Location = new System.Drawing.Point(108, 4);
             this.cmbKind.Name = "cmbKind";
-            this.cmbKind.Size = new System.Drawing.Size(128, 20);
+            this.cmbKind.Size = new System.Drawing.Size(109, 20);
             this.cmbKind.TabIndex = 6;
             this.cmbKind.SelectedIndexChanged += new System.EventHandler(this.cmbKind_SelectedIndexChanged);
             // 
             // lblKind
             // 
             this.lblKind.AutoSize = true;
-            this.lblKind.Location = new System.Drawing.Point(149, 5);
+            this.lblKind.Location = new System.Drawing.Point(76, 7);
             this.lblKind.Name = "lblKind";
             this.lblKind.Size = new System.Drawing.Size(29, 12);
             this.lblKind.TabIndex = 7;
@@ -117,9 +118,9 @@
             // 
             this.button2.Location = new System.Drawing.Point(12, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(116, 22);
+            this.button2.Size = new System.Drawing.Size(58, 22);
             this.button2.TabIndex = 16;
-            this.button2.Text = "チェックボックスOFF";
+            this.button2.Text = "全てOFF";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -127,7 +128,7 @@
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(225, 433);
+            this.btnClose.Location = new System.Drawing.Point(266, 433);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(84, 30);
             this.btnClose.TabIndex = 17;
@@ -135,12 +136,21 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.button1_Click);
             // 
+            // txtFilter
+            // 
+            this.txtFilter.Location = new System.Drawing.Point(223, 4);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(127, 19);
+            this.txtFilter.TabIndex = 18;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
             // FormItemSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(321, 467);
+            this.ClientSize = new System.Drawing.Size(362, 467);
+            this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.grdProductNames);
@@ -170,5 +180,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.TextBox txtFilter;
     }
 }

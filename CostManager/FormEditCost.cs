@@ -88,13 +88,15 @@ namespace CostManager
             {
                 if (!costData.IsSame(costDataBk))
                 {
-                    if (Utility.MessageConfirm("データが変更されています。\n編集画面を閉じますか？") != DialogResult.OK)
+                    if (Utility.MessageConfirm("データが変更されています。\n\n編集内容を設定しますか？") == DialogResult.OK)
                     {
-                        e.Cancel = true;
-                        return;
+                        DialogResult = DialogResult.OK;
+                    }else
+                    {
+                        //編集前の状態に戻す
+                        costDataBk.CopyTo(costData);
                     }
                 }
-                costDataBk.CopyTo(costData);
             }
             
             SaveUserSetting();
@@ -120,6 +122,8 @@ namespace CostManager
         }
         void DispCostData()
         {
+            bool bDispID = Global.optionData.DispIDtoList;
+
             lblProductName.Text = Utility.RemoveCRLF(costData.ProductName);
             txtMakeNum.Text     = costData.ProductNum.ToString();
             lblPriceSum.Text = costData.Price.ToString();
@@ -141,7 +145,7 @@ namespace CostManager
 
                 row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
                 row.Cells[(int)COL_MATERIAL.KIND].Value = material.kind;
-                row.Cells[(int)COL_MATERIAL.NAME].Value = material.name;
+                row.Cells[(int)COL_MATERIAL.NAME].Value = material.ToString(bDispID);
                 row.Cells[(int)COL_MATERIAL.AMOUNT].Value = val.AmountUsed; //使用量
                 row.Cells[(int)COL_MATERIAL.COST].Value = val.CalcCost(); //原価 × val.amountUsed
                 row.Tag = val;
@@ -156,7 +160,7 @@ namespace CostManager
                 grdWorker.Columns[(int)COL_WORKER.TIME].DefaultCellStyle.BackColor = Color.LightBlue;
 
                 row.Cells[(int)COL_WORKER.CHECK].Value = false;
-                row.Cells[(int)COL_WORKER.NAME].Value = worker.name;
+                row.Cells[(int)COL_WORKER.NAME].Value = worker.ToString(bDispID);
                 row.Cells[(int)COL_WORKER.TIME].Value = val.WorkingTime; //時間（分)
                 row.Cells[(int)COL_WORKER.COST].Value = (float)(worker.hourlyPay / 60.0) * val.WorkingTime; //時給 / 60 × val.workingTime
                 row.Tag = val;
@@ -171,7 +175,7 @@ namespace CostManager
                 var row = grdPackage.Rows[index];
 
                 row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
-                row.Cells[(int)COL_PACKAGE.NAME].Value = package.name;
+                row.Cells[(int)COL_PACKAGE.NAME].Value = package.ToString(bDispID);
                 row.Cells[(int)COL_PACKAGE.NUM].Value = val.RequiredNum; //必要数
                 row.Cells[(int)COL_PACKAGE.COST].Value = package.cost * val.RequiredNum; //単価 × val.requiredNum
                 row.Tag = val;
@@ -203,19 +207,15 @@ namespace CostManager
             {
                 lblCostRate.ForeColor = Color.Black;
                 lblProfitRate.ForeColor = Color.Black;
-                //原価率
-                lblCostRate.Text = ((allCost / costData.Price)).ToString("P2");// "%"
-                 //利益率
-                lblProfitRate.Text = (costData.GetProfitRate()).ToString("P2");// "%"
             }else
             {
                 lblCostRate.ForeColor = Color.Red;
                 lblProfitRate.ForeColor = Color.Red;
-                //原価率
-                lblCostRate.Text = (0).ToString("P2");// "%"
-                //利益率
-                lblProfitRate.Text = (0).ToString("P2");// "%"
             }
+            //原価率
+            lblCostRate.Text = ((allCost / costData.Price)).ToString("P2");// "%"
+                                                                           //利益率
+            lblProfitRate.Text = (costData.GetProfitRate()).ToString("P2");// "%"
             var product = productReader.GetProductDataByID(costData.ProductId);
 
             //栄養成分
@@ -266,7 +266,7 @@ namespace CostManager
             //重複チェック
             if(costData.LstMaterialCost.Find(x=> x.ID == data.id)!=null)
             {
-                Utility.MessageError($"同じ原材料が登録済みです。\n\n{data.name}");
+                Utility.MessageError($"同じ原材料が登録済みです。\n\n{data.ToString(true)}");
                 return false;
             }
             MaterialCost cost = new MaterialCost(data.id, 0, costReader);
@@ -277,7 +277,7 @@ namespace CostManager
 
             row.Cells[(int)COL_MATERIAL.CHECK].Value = false;
             row.Cells[(int)COL_MATERIAL.KIND].Value = data.kind;
-            row.Cells[(int)COL_MATERIAL.NAME].Value = data.name;
+            row.Cells[(int)COL_MATERIAL.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
             row.Tag = cost;
 
             //ラベル情報更新
@@ -362,7 +362,7 @@ namespace CostManager
             var row = grdRowMaterial.Rows[index];
 
             row.Cells[(int)COL_WORKER.CHECK].Value = false;
-            row.Cells[(int)COL_WORKER.NAME].Value = data.name;
+            row.Cells[(int)COL_WORKER.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
             row.Tag = cost;
             //ラベル情報更新
             UpdateLabelData();
@@ -439,7 +439,7 @@ namespace CostManager
             //重複チェック
             if (costData.LstPackageCost.Find(x => x.ID == data.id) != null)
             {
-                Utility.MessageError($"同じ包装材が登録済みです。\n\n{data.name}");
+                Utility.MessageError($"同じ包装材が登録済みです。\n\n{data.ToString(true)}");
                 return false;
             }
 
@@ -451,7 +451,7 @@ namespace CostManager
             var row = grdRowMaterial.Rows[index];
 
             row.Cells[(int)COL_PACKAGE.CHECK].Value = false;
-            row.Cells[(int)COL_PACKAGE.NAME].Value = data.name;
+            row.Cells[(int)COL_PACKAGE.NAME].Value = data.ToString(Global.optionData.DispIDtoList);
             row.Tag = cost;
             //ラベル情報更新
             UpdateLabelData();

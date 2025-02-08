@@ -14,26 +14,25 @@ namespace CostManager
 {
     public partial class FormOption : Form
     {
-        OptionData optionData;
-        public FormOption(OptionData optionData)
+        public FormOption()
         {
             InitializeComponent();
-            this.optionData = optionData;
         }
 
         private void FormOption_Load(object sender, EventArgs e)
         {
-            txtDataBasePath.Text = optionData.DataBasePath;
+            txtDataBasePath.Text = Global.optionData.DataBasePath;
+            chkDispIDtoList.Checked = Global.optionData.DispIDtoList;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(! Directory.Exists(txtDataBasePath.Text))
+            if (!Directory.Exists(txtDataBasePath.Text))
             {
                 Utility.MessageError("指定されたデータベースフォルダは存在しません");
                 return;
             }
-            optionData.DataBasePath = txtDataBasePath.Text;
+            Global.optionData.DataBasePath = txtDataBasePath.Text;
 
             DialogResult = DialogResult.OK;
             this.Close();
@@ -48,13 +47,17 @@ namespace CostManager
         private void button1_Click(object sender, EventArgs e)
         {
             FolderSelectDialog dlg = new FolderSelectDialog();
-            dlg.Path = optionData.DataBasePath;
+            dlg.Path = Global.optionData.DataBasePath;
             dlg.Title = "商品データベース格納フォルダを選択";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 txtDataBasePath.Text = dlg.Path;
             }
 
+        }
+        private void chkDispIDtoList_CheckedChanged(object sender, EventArgs e)
+        {
+            Global.optionData.DispIDtoList = chkDispIDtoList.Checked;
         }
     }
 }

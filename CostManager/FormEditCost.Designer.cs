@@ -216,7 +216,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 12);
             this.label3.TabIndex = 13;
-            this.label3.Text = "制作数：";
+            this.label3.Text = "製作数：";
             // 
             // txtMakeNum
             // 

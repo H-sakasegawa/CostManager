@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,10 +30,6 @@ namespace CostManager
     [Serializable]
     public class CostData
     {
-
-
-
-
         /// <summary>
         /// 商品コード
         /// </summary>
@@ -91,20 +88,16 @@ namespace CostManager
             LstPackageCost.Add(new PackageCost("3", ProductNum, costReader));
             LstPackageCost.Add(new PackageCost("4", ProductNum, costReader));
             LstPackageCost.Add(new PackageCost("5", ProductNum, costReader));
-#else
-            //以下の作業者と、包装材はデフォルト設定とする
-            LstWorkerCost.Add(new WorkerCost("1", 0, costReader));
-            LstWorkerCost.Add(new WorkerCost("2", 0, costReader));
-
-            LstPackageCost.Add(new PackageCost("1", 0, costReader));
-            LstPackageCost.Add(new PackageCost("2", 0, costReader));
-            LstPackageCost.Add(new PackageCost("3", 0, costReader));
-            LstPackageCost.Add(new PackageCost("4", 0, costReader));
-            LstPackageCost.Add(new PackageCost("5", 0, costReader));
 
 #endif
+           
 
+        }
 
+        public string ID_Name(bool bDispID = false)
+        {
+            if (bDispID) return $"({ProductId}){ProductName}";
+            return ProductName;
         }
 
         public void AttachCostReader(CostReader costBaseInfo)
@@ -150,11 +143,6 @@ namespace CostManager
             //原価
             var cost = rowCost + laborCost + packageCost;
 
-            if (Price < cost)
-            {
-                //原価割れ
-                return -1;
-            }
 
             //各原価率
             if (Price != 0)
@@ -171,6 +159,11 @@ namespace CostManager
             //利益（n個販売時の定価 - n個販売時の定価定価　 *原価率)
             profit = Price - Price * costRate;
 
+            if (Price < cost)
+            {
+                //原価割れ
+                return -1;
+            }
             return 0;
         }
 

@@ -34,6 +34,8 @@ namespace CostManager
 
         public const string strFmtC = "C1";
 
+        public const float WheelInc = 0.5f;
+
         /// <summary>
         /// 商品リストのホイール操作によるフォントサイズ変更値
         /// </summary>

@@ -42,6 +42,12 @@ namespace ExcelReaderUtility
             /// 原価基準容量
             /// </summary>
             public float gram;
+
+            public string ToString(bool bDispID=false)
+            {
+                if(bDispID) return $"({id}){name}";
+                return name;
+            }
         }
         public class WorkerData
         {
@@ -57,6 +63,12 @@ namespace ExcelReaderUtility
             /// 時給
             /// </summary>
             public uint hourlyPay;
+
+            public string ToString(bool bDispID=false)
+            {
+                if (bDispID) return $"({id}){name}";
+                return name;
+            }
         }
         public class PackageData
         {
@@ -72,6 +84,12 @@ namespace ExcelReaderUtility
             /// 単価(１個辺り）
             /// </summary>
             public float cost;
+
+            public string ToString(bool bDispID=false)
+            {
+                if (bDispID) return $"({id}){name}";
+                return name;
+            }
         }
 
         /// <summary>

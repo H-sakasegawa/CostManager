@@ -13,9 +13,12 @@ using System.Windows.Forms;
 using System.IO;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
+using System.Reflection;
+using NPOI.HSSF.Record;
 
 namespace CostManager
 {
+
     public partial class FormMain : Form
     {
         enum COL_INDEX
@@ -34,15 +37,22 @@ namespace CostManager
             MAX
 
         }
-        OptionData optionData = new OptionData();
-        ProductReader productReader = new ProductReader();
-        CostReader costReader = new CostReader();
+        //OptionData optionData = new OptionData();
+        //ProductReader productReader = new ProductReader();
+        //CostReader costReader = new CostReader();
         string curCostDataFilePath = null;
         bool bAltDataFlg = false;
 
         public FormMain()
         {
             InitializeComponent();
+
+            var assembly = Assembly.GetExecutingAssembly().GetName();
+            var ver = assembly.Version;
+
+            // アセンブリ名 1.0.0.0
+            this.Text = $"{assembly.Name} - {ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -50,30 +60,35 @@ namespace CostManager
             LoadUserSetting();
 
             //現在のサイズでフォームの最小サイズを指定
-            this.MinimumSize = new Size(this.Width, this.Height);
+           // this.MinimumSize = new Size(this.Width, this.Height);
 
-            if (string.IsNullOrEmpty(optionData.DataBasePath))
+            if (string.IsNullOrEmpty(Global.optionData.DataBasePath))
             {
                 Utility.MessageConfirm("データベースのフォルダが未設定です。\nオプション画面からデータベースのフォルダを設定してください。", "データベースパス");
                 EnalbeControl(false);
                 return;
             }
-            ReadDataBase(optionData.DataBasePath);
+            ReadDataBase(Global.optionData.DataBasePath);
+
+            UpdateListFont();
+
+
+            gridList.MouseWheel += OnGridList_MouseWheel;
+
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (bAltDataFlg)
             {
-                if (Utility.MessageConfirm("データが変更されています。\nアプリケーションを終了じますか？") != DialogResult.OK)
+                if (Utility.MessageConfirm("データが変更されています。\n\n保存しますか？") == DialogResult.OK)
                 {
-                    e.Cancel = true;
-                    return;
+                    mnuSave_Click(null, null);
                 }
             }
 
             SaveUserSetting();
-            optionData.SaveOptions();
+            Global.optionData.SaveOptions();
         }
 
         private void LoadUserSetting()
@@ -84,6 +99,17 @@ namespace CostManager
                                     Properties.Settings.Default.FrmMainSizeW,
                                     Properties.Settings.Default.FrmMainSizeH
                                     );
+            int iCol = 0;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColChkW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColKindW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColNameW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColNumW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColCostRateW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColMaterialW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColWorkerlW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColPackageW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColPriceW;
+            gridList.Columns[iCol++].Width = Properties.Settings.Default.ProductListColProfitW;
         }
         private void SaveUserSetting()
         {
@@ -91,6 +117,18 @@ namespace CostManager
             Properties.Settings.Default.FrmMainLocY = this.Location.Y;
             Properties.Settings.Default.FrmMainSizeW = this.Size.Width;
             Properties.Settings.Default.FrmMainSizeH = this.Size.Height;
+            int iCol = 0;
+            Properties.Settings.Default.ProductListColChkW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColKindW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColNameW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColNumW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColCostRateW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColMaterialW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColWorkerlW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColPackageW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColPriceW = gridList.Columns[iCol++].Width;
+            Properties.Settings.Default.ProductListColProfitW = gridList.Columns[iCol++].Width;
+
             Properties.Settings.Default.Save();
         }
 
@@ -113,11 +151,11 @@ namespace CostManager
             //-------------------------------------------
             // 商品データを読み込む
             //-------------------------------------------
-            productReader.ReadExcel(productDataBase);
+            Global.productReader.ReadExcel(productDataBase);
             //-------------------------------------------
             // 原価データを読み込む
             //-------------------------------------------
-            costReader.ReadExcel(costDataBase);
+            Global.costReader.ReadExcel(costDataBase);
 
             return 0;
         }
@@ -139,7 +177,7 @@ namespace CostManager
                 foreach (DataGridViewRow row in gridList.Rows)
                 {
                     CostData costData = (CostData)row.Tag;
-                    var product = productReader.GetProductDataByID(costData.ProductId);
+                    var product = Global.productReader.GetProductDataByID(costData.ProductId);
                     if (SelectKind == product.kind)
                     {
                         row.Visible = true;
@@ -152,6 +190,35 @@ namespace CostManager
             }
         }
 
+        void OnGridList_MouseWheel(object sender, MouseEventArgs e)
+        {
+
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.Delta > 0)
+                {
+                    Properties.Settings.Default.ProductListFontSize -= Const.prodListFontSizeInc;
+                }
+                else
+                {
+                    Properties.Settings.Default.ProductListFontSize += Const.prodListFontSizeInc;
+                }
+
+                UpdateListFont();
+            }
+        }
+        /// <summary>
+        /// グリッドのフォント設定
+        /// </summary>
+        private void UpdateListFont()
+        {
+            gridList.Font = new Font(gridList.Font.Name, Properties.Settings.Default.ProductListFontSize);
+            int intRowHeight = (int)(float.Parse(gridList.Font.Size.ToString()) + 12);
+            for (int i = 0; i < gridList.Rows.Count; i++)
+            {
+                gridList.Rows[i].Height = intRowHeight;
+            }
+        }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -197,7 +264,7 @@ namespace CostManager
         /// <param name="product"></param>
         public void AddProduct(ProductReader.ProductData product)
         {
-            CostData costData = new CostData(product, costReader);
+            CostData costData = new CostData(product, Global.costReader);
             AddCostDataToRow(costData);
         }
         public void AddCostDataToRow(CostData costData)
@@ -210,7 +277,7 @@ namespace CostManager
 
             row.Cells[(int)COL_INDEX.CHECK].Value = false;
             row.Cells[(int)COL_INDEX.KIND].Value = costData.Kind;
-            row.Cells[(int)COL_INDEX.NAME].Value = costData.ProductName;
+            row.Cells[(int)COL_INDEX.NAME].Value = costData.ID_Name(Global.optionData.DispIDtoList);
             row.Tag = costData;
 
             UpdateRowValues(row);
@@ -249,8 +316,15 @@ namespace CostManager
             row.Cells[(int)COL_INDEX.MATERIAL_COST].Value = rowCostRate * 100;
             row.Cells[(int)COL_INDEX.WORKER_COST].Value = laborCostRate * 100;
             row.Cells[(int)COL_INDEX.PACKAGE_COST].Value = packageCostRate * 100;
-            row.Cells[(int)COL_INDEX.PRICE].Value = costData.Price;
-            row.Cells[(int)COL_INDEX.PROFIT].Value = profit;
+            if (costData.ProductNum != 0)
+            {
+                row.Cells[(int)COL_INDEX.PRICE].Value = costData.Price / costData.ProductNum; //1個辺りの定価
+                row.Cells[(int)COL_INDEX.PROFIT].Value = profit / costData.ProductNum; //１個辺りの利益
+            }else
+            {
+                row.Cells[(int)COL_INDEX.PRICE].Value =0; 
+                row.Cells[(int)COL_INDEX.PROFIT].Value = 0; 
+            }
 
             Color forColor = Color.Black;
             if (rc != 0)
@@ -262,11 +336,25 @@ namespace CostManager
                 row.Cells[i].Style.ForeColor = forColor;
             }
         }
+        FormItemSelector frm = null;
         private void button1_Click(object sender, EventArgs e)
         {
-            FormItemSelector frm = new FormItemSelector(this, productReader);
-            frm.Show();
+            if (frm != null)
+            {
 
+                try
+                {
+                    if (!frm.IsDisposed)
+                    {
+                        frm.Visible = false;
+                        frm.Show(this);
+                        return;
+                    }
+                }
+                catch { }
+            }
+            frm = new FormItemSelector(this, Global.productReader);
+            frm.Show(this);
         }
 
         private void chkAll_CheckedChanged(object sender, EventArgs e)
@@ -284,7 +372,7 @@ namespace CostManager
 
             var costData = (CostData)selectRows[0].Tag;
 
-            FormEditCost frm = new FormEditCost(costData, costReader, productReader);
+            FormEditCost frm = new FormEditCost(costData, Global.costReader, Global.productReader);
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 //メイングリッドの各種コストを計算して表示　★★
@@ -302,12 +390,14 @@ namespace CostManager
 
         private void mnuOption_Click(object sender, EventArgs e)
         {
-            string orgPath = optionData.DataBasePath;
+            string orgPath = Global.optionData.DataBasePath;
 
-            FormOption frm = new FormOption(optionData);
+            bool orgDispIDtoList = Global.optionData.DispIDtoList;
+
+            FormOption frm = new FormOption();
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                if (string.IsNullOrEmpty(optionData.DataBasePath))
+                if (string.IsNullOrEmpty(Global.optionData.DataBasePath))
                 {
                     Utility.MessageConfirm("データベースのフォルダが未設定です。\nオプション画面からデータベースのフォルダを設定してください。", "データベースパス");
                     EnalbeControl(false);
@@ -316,10 +406,27 @@ namespace CostManager
                 EnalbeControl(true);
 
                 //パスに変更が発生したら読み込みなおし
-                if (orgPath != optionData.DataBasePath)
+                if (orgPath != Global.optionData.DataBasePath)
                 {
-                    ReadDataBase(optionData.DataBasePath);
+                    ReadDataBase(Global.optionData.DataBasePath);
                 }
+                //名称表示のID表示設定に変更があったか？
+                if(orgDispIDtoList != Global.optionData.DispIDtoList)
+                {
+                    UpdateListName();
+                }
+            }
+        }
+        /// <summary>
+        /// 一覧に表示されている商品名の名称表示更新
+        /// </summary>
+        void UpdateListName()
+        {
+            foreach (DataGridViewRow row in gridList.Rows)
+            {
+                CostData cost = (CostData)row.Tag;
+
+                row.Cells[(int)COL_INDEX.NAME].Value = cost.ID_Name(Global.optionData.DispIDtoList);
             }
         }
 
@@ -345,6 +452,9 @@ namespace CostManager
                 }
             }
             SaveData(curCostDataFilePath);
+
+            //編集フラグをリセット
+            bAltDataFlg = false;
         }
         /// <summary>
         /// 保存ボタン
@@ -412,6 +522,7 @@ namespace CostManager
             {
                 var loadData = LoadData(dlg.FileName);
                 ReadCostDataToRow(loadData);
+
             }
         }
 
@@ -468,10 +579,12 @@ namespace CostManager
             foreach (var data in loadData.ListCostDatas)
             {
                 //読み込まれたデータにCost管理がひもついていないので、ここで設定
-                data.AttachCostReader(costReader);
+                data.AttachCostReader(Global.costReader);
 
                 AddCostDataToRow(data);
             }
+            //編集ありフラグリセット
+            bAltDataFlg = false;
 
 
         }

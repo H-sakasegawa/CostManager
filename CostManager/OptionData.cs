@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +12,35 @@ namespace CostManager
     {
 
         public OptionData() {
-            DataBasePath = Properties.Settings.Default.DataBasePath;
-
         }
         public void SaveOptions()
         {
-            Properties.Settings.Default.DataBasePath = DataBasePath;
             Properties.Settings.Default.Save();
 
         }
 
-        public string DataBasePath;
+        public string DataBasePath
+        {
+            get
+            {
+               return Properties.Settings.Default.DataBasePath;
+            }
+            set
+            {
+                Properties.Settings.Default.DataBasePath = value;
+            }
+        }
+        public bool DispIDtoList
+        {
+            get
+            {
+                return Properties.Settings.Default.DispIDtoList;
+            }
+            set
+            {
+                Properties.Settings.Default.DispIDtoList = value;
+            }
+        }
+
     }
 }

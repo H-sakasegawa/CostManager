@@ -71,6 +71,22 @@ namespace CostManager
             colText.Width = 300;
             columns.Add(colText);
 
+            bool bDispID = Global.optionData.DispIDtoList;
+
+            var lstProduct = productBaseInfo.GetProductList();
+            foreach (var product in lstProduct)
+            {
+                var index = grdProductNames.Rows.Add(product.kind);
+                var row = grdProductNames.Rows[index];
+                row.Cells[(int)GridVieCol.GVC_CHECK].Value = false;
+                row.Cells[(int)GridVieCol.GVC_VALUE1].Value = product.kind;
+                row.Cells[(int)GridVieCol.GVC_VALUE2].Value = product.ToString(bDispID);
+                row.Tag = product;
+            }
+            int iCol = 0;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColChkW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColKindW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColNameW;
 
             //-------------------------------------------
             // コンボボックスアイテム設定
@@ -115,6 +131,21 @@ namespace CostManager
             colText.ReadOnly = true;
             colText.Width = 300;
             columns.Add(colText);
+
+            bool bDispID = Global.optionData.DispIDtoList;
+            foreach (var material in lstMaterial)
+            {
+                var index = grdProductNames.Rows.Add(material.kind);
+                var row = grdProductNames.Rows[index];
+                row.Cells[(int)GridVieCol.GVC_CHECK].Value = false;
+                row.Cells[(int)GridVieCol.GVC_VALUE1].Value = material.kind;
+                row.Cells[(int)GridVieCol.GVC_VALUE2].Value = material.ToString(bDispID);
+                row.Tag = material;
+            }
+            int iCol = 0;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColChkW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColKindW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColNameW;
 
             //-------------------------------------------
             // コンボボックスアイテム設定
@@ -164,14 +195,19 @@ namespace CostManager
             colText.Width = 200;
             columns.Add(colText);
 
+            bool bDispID = Global.optionData.DispIDtoList;
             foreach (var worker in lstWorker)
             {
                 var index = grdProductNames.Rows.Add();
-                grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_CHECK].Value = false;
-                grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE1].Value = worker.name;
-                grdProductNames.Rows[index].Tag = worker;
+                var row = grdProductNames.Rows[index];
+                row.Cells[(int)GridVieCol.GVC_CHECK].Value = false;
+                row.Cells[(int)GridVieCol.GVC_VALUE1].Value = worker.ToString(bDispID);
+                row.Tag = worker;
             }
 
+            int iCol = 0;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColChkW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColNameW;
 
         }
         //包装材選択
@@ -201,13 +237,18 @@ namespace CostManager
             colText.Width = 200;
             columns.Add(colText);
 
+            bool bDispID = Global.optionData.DispIDtoList;
             foreach (var package in lstPackage)
             {
                 var index = grdProductNames.Rows.Add();
-                grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_CHECK].Value = false;
-                grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE1].Value = package.name;
-                grdProductNames.Rows[index].Tag = package;
+                var row = grdProductNames.Rows[index];
+                row.Cells[(int)GridVieCol.GVC_CHECK].Value = false;
+                row.Cells[(int)GridVieCol.GVC_VALUE1].Value = package.ToString(bDispID);
+                row.Tag = package;
             }
+            int iCol = 0;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColChkW;
+            grdProductNames.Columns[iCol++].Width = Properties.Settings.Default.ItemSelectColNameW;
         }
 
 
@@ -217,11 +258,15 @@ namespace CostManager
             this.MinimumSize = new Size(this.Width, this.Height);
 
             LoadUserSetting();
+            UpdateListFont();
+
+            grdProductNames.MouseWheel += LstProductNames_MouseWheel;
 
         }
         private void FormItemSelector_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveUserSetting();
+
         }
 
         private void LoadUserSetting()
@@ -240,41 +285,120 @@ namespace CostManager
             Properties.Settings.Default.FrmItemSelectLocY = this.Location.Y;
             Properties.Settings.Default.FrmItemSelectSizeW = this.Size.Width;
             Properties.Settings.Default.FrmItemSelectSizeH = this.Size.Height;
+
+            Properties.Settings.Default.ItemSelectColChkW = grdProductNames.Columns[(int)GridVieCol.GVC_CHECK].Width;
+            switch(selectType)
+            {
+                case enmSelectType.PRODUCT:
+                case enmSelectType.MATERIAL:
+                    Properties.Settings.Default.ItemSelectColKindW = grdProductNames.Columns[(int)GridVieCol.GVC_VALUE1].Width;
+                    Properties.Settings.Default.ItemSelectColNameW = grdProductNames.Columns[(int)GridVieCol.GVC_VALUE2].Width;
+                    break;
+                case enmSelectType.WORKER:
+                case enmSelectType.PACKAGE:
+                    Properties.Settings.Default.ItemSelectColNameW = grdProductNames.Columns[(int)GridVieCol.GVC_VALUE1].Width;
+                    break;
+
+            }
             Properties.Settings.Default.Save();
         }
 
+        private void LstProductNames_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (e.Delta > 0)
+                {
+                    Properties.Settings.Default.ItemSelectFontSize -= Const.WheelInc;
+                    if(Properties.Settings.Default.ItemSelectFontSize<0.5f)
+                    {
+                        Properties.Settings.Default.ItemSelectFontSize = 0.5f;
+                    }
+                }
+                else
+                {
+                    Properties.Settings.Default.ItemSelectFontSize += Const.WheelInc;
+                }
+
+                UpdateListFont();
+            }
+        }
+        /// <summary>
+        /// グリッドのフォント設定
+        /// </summary>
+        private void UpdateListFont()
+        {
+            grdProductNames.Font = new Font(grdProductNames.Font.Name, Properties.Settings.Default.ItemSelectFontSize);
+            int intRowHeight = (int)(float.Parse(grdProductNames.Font.Size.ToString()) + 12);
+            for (int i = 0; i < grdProductNames.Rows.Count; i++)
+            {
+                grdProductNames.Rows[i].Height = intRowHeight;
+            }
+        }
+
+        /// <summary>
+        /// 分類コンボボックス
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cmbKind_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //選択された種別の商品名をグリッドに設定
-            grdProductNames.Rows.Clear();
+            DoFilter();
+        }
 
-            if (selectType == enmSelectType.PRODUCT)
+        /// <summary>
+        /// 商品名フィルタ
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            DoFilter();
+        }
+
+        private void DoFilter()
+        { 
+            foreach (DataGridViewRow row in grdProductNames.Rows)
             {
-                var lstProduct = productBaseInfo.GetProductList(cmbKind.Text);
-                foreach (var product in lstProduct)
+                string kind = null;
+                string name = null;
+                switch (selectType)
                 {
-                    var index = grdProductNames.Rows.Add(product.kind);
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_CHECK].Value = false;
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE1].Value = product.kind;
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE2].Value = product.name;
-                    grdProductNames.Rows[index].Tag = product;
+                    case enmSelectType.PRODUCT:
+                    case enmSelectType.MATERIAL:
+                        kind = (string)row.Cells[(int)GridVieCol.GVC_VALUE1].Value;
+                        name = (string)row.Cells[(int)GridVieCol.GVC_VALUE2].Value;
+                        break;
+                    case enmSelectType.WORKER:
+                    case enmSelectType.PACKAGE:
+                        name = (string)row.Cells[(int)GridVieCol.GVC_VALUE1].Value;
+                        break;
+
                 }
-            }else if(selectType == enmSelectType.MATERIAL)
-            {
-                foreach (var material in lstMaterial)
+
+                row.Visible = true;
+                //種別によるフィルタ
+                if ( kind!=null)
                 {
-                    if(cmbKind.Text != Const.SelectAll && material.kind != cmbKind.Text)
+                    if (cmbKind.Text != Const.SelectAll)
                     {
-                        continue;
+                        if(cmbKind.Text != kind)
+                        {
+                            row.Visible = false;
+                        }
                     }
-                    var index = grdProductNames.Rows.Add(material.kind);
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_CHECK].Value = false;
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE1].Value = material.kind;
-                    grdProductNames.Rows[index].Cells[(int)GridVieCol.GVC_VALUE2].Value = material.name;
-                    grdProductNames.Rows[index].Tag = material;
+                }
+                //名称フィルタ
+                if (!string.IsNullOrEmpty(txtFilter.Text))
+                {
+                    if (name.IndexOf(txtFilter.Text) < 0)
+                    {
+                        row.Visible = false;
+                    }
                 }
             }
         }
+
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
