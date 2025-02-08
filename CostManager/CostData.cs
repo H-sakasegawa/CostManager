@@ -72,22 +72,22 @@ namespace CostManager
             Kind = Utility.RemoveCRLF(product.kind);
 
 #if DEBUG
-            ProductNum = 50;
-            Price = 1500;
+            //ProductNum = 50;
+            //Price = 1500;
 
-            LstMaterialCost.Add(new MaterialCost("1", 10, costReader));
-            LstMaterialCost.Add(new MaterialCost("2", 22, costReader));
-            LstMaterialCost.Add(new MaterialCost("3", 33, costReader));
-            LstMaterialCost.Add(new MaterialCost("4", 44, costReader));
+            //LstMaterialCost.Add(new MaterialCost("1", 10, costReader));
+            //LstMaterialCost.Add(new MaterialCost("2", 22, costReader));
+            //LstMaterialCost.Add(new MaterialCost("3", 33, costReader));
+            //LstMaterialCost.Add(new MaterialCost("4", 44, costReader));
 
-            LstWorkerCost.Add(new WorkerCost("1", 0, costReader));
-            LstWorkerCost.Add(new WorkerCost("2", 0, costReader));
+            //LstWorkerCost.Add(new WorkerCost("1", 0, costReader));
+            //LstWorkerCost.Add(new WorkerCost("2", 0, costReader));
 
-            LstPackageCost.Add(new PackageCost("1", ProductNum, costReader));
-            LstPackageCost.Add(new PackageCost("2", ProductNum, costReader));
-            LstPackageCost.Add(new PackageCost("3", ProductNum, costReader));
-            LstPackageCost.Add(new PackageCost("4", ProductNum, costReader));
-            LstPackageCost.Add(new PackageCost("5", ProductNum, costReader));
+            //LstPackageCost.Add(new PackageCost("1", ProductNum, costReader));
+            //LstPackageCost.Add(new PackageCost("2", ProductNum, costReader));
+            //LstPackageCost.Add(new PackageCost("3", ProductNum, costReader));
+            //LstPackageCost.Add(new PackageCost("4", ProductNum, costReader));
+            //LstPackageCost.Add(new PackageCost("5", ProductNum, costReader));
 
 #endif
            
@@ -228,7 +228,10 @@ namespace CostManager
         {
             var profit = GetProfit();
             //利益（n個販売時の定価 - n個販売時の定価定価　 *原価率)
-            return profit / Price;
+            if (Price != 0)
+                return profit / Price;
+            else
+                return 0;
         }
         //原価割れ判定
         public bool IsBelowCost()

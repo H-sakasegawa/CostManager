@@ -209,19 +209,21 @@ namespace CostManager
             //製品単価
             lblCostOne.Text = costData.GetCostOne().ToString(Const.strFmtC);
 
+            //原価率
             var allCost = costData.GetAllCost();
             if (allCost < costData.Price && costData.Price!=0)
             {
                 lblCostRate.ForeColor = Color.Black;
                 lblProfitRate.ForeColor = Color.Black;
-            }else
+                lblCostRate.Text = ((allCost / costData.Price)).ToString("P2");// "%"
+            }
+            else
             {
                 lblCostRate.ForeColor = Color.Red;
                 lblProfitRate.ForeColor = Color.Red;
+                lblCostRate.Text = 0.ToString("P2");// "%"
             }
-            //原価率
-            lblCostRate.Text = ((allCost / costData.Price)).ToString("P2");// "%"
-                                                                           //利益率
+            //利益率
             lblProfitRate.Text = (costData.GetProfitRate()).ToString("P2");// "%"
             var product = productReader.GetProductDataByID(costData.ProductId);
 
